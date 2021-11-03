@@ -4,6 +4,7 @@ import Flexer
 public enum BNFTokenKind {
     case word
     case comma
+    case equals
     case period
     case semicolon
     case colon
@@ -42,6 +43,8 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
     }
 
     public mutating func next() -> Element? {
+        _ = lexer.nextUntil(notIn: [.space, .tab, .newline])
+
         guard let token = lexer.peek() else {
             return nil
         }
@@ -51,7 +54,8 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             let endingToken = lexer.nextUntil(notIn: [.lowercaseLetter, .uppercaseLetter, .dash, .underscore])
 
             return BNFToken(kind: .word, start: token, end: endingToken)
-
+        case .equals:
+            return BNFToken(kind: .equals, range: token.range)
         default:
             break
         }
