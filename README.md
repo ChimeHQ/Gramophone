@@ -1,3 +1,5 @@
+[![Github CI](https://github.com/ChimeHQ/Gramophone/workflows/CI/badge.svg)](https://github.com/ChimeHQ/Gramophone/actions)
+
 # Gramophone
 Swift library for parsing Extended Backus–Naur Form (EBNF) notation
 

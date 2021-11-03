@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Flexer",
+        "repositoryURL": "https://github.com/ChimeHQ/Flexer",
+        "state": {
+          "branch": "main",
+          "revision": "71c856c84537e6d172509f837593587eac216a9b",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
