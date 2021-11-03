@@ -64,12 +64,7 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
                                                .underscore,
                                                .digit])
 
-        guard let endingToken = endingToken else {
-            return nil
-        }
-
-        let range = token.startIndex..<endingToken.endIndex
-        return BNFToken(kind: .word, range: range)
+        return BNFToken(kind: .word, start: token, end: endingToken)
     }
 }
 
