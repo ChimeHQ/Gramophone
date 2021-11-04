@@ -3,6 +3,7 @@ import Flexer
 
 public enum BNFTokenKind {
     case word
+    case terminalString
     case comma
     case equals
     case period
@@ -25,14 +26,6 @@ public enum BNFTokenKind {
 
 typealias BNFToken = Flexer.Token<BNFTokenKind>
 
-extension BNFToken {
-    init?(kind: Kind, start: BasicTextCharacter, end: BasicTextCharacter?) {
-        guard let end = end else { return nil }
-
-        self.init(kind: kind, range: start.startIndex..<end.endIndex)
-    }
-}
-
 struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
     public typealias Element = BNFToken
 
@@ -54,8 +47,34 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             let endingToken = lexer.nextUntil(notIn: [.lowercaseLetter, .uppercaseLetter, .dash, .underscore])
 
             return BNFToken(kind: .word, start: token, end: endingToken)
+        case .singleQuote:
+            _ = lexer.next()
+            _ = lexer.nextUntil(in: [.singleQuote])
+            let endingToken = lexer.next()
+
+            return BNFToken(kind: .terminalString, start: token, end: endingToken)
+        case .doubleQuote:
+            _ = lexer.next()
+            _ = lexer.nextUntil(in: [.doubleQuote])
+            let endingToken = lexer.next()
+
+            return BNFToken(kind: .terminalString, start: token, end: endingToken)
+        case .comma:
+            _ = lexer.next()
+
+            return BNFToken(kind: .comma, range: token.range)
+        case .semicolon:
+            _ = lexer.next()
+
+            return BNFToken(kind: .semicolon, range: token.range)
         case .equals:
+            _ = lexer.next()
+            
             return BNFToken(kind: .equals, range: token.range)
+        case .pipe:
+            _ = lexer.next()
+
+            return BNFToken(kind: .pipe, range: token.range)
         default:
             break
         }
