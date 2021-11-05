@@ -3,9 +3,7 @@ import Flexer
 
 public enum BNFTokenKind {
     case word
-    case terminalString
     case comma
-    case equals
     case period
     case semicolon
     case colon
@@ -22,6 +20,7 @@ public enum BNFTokenKind {
     case pipe
     case star
 
+    case assignment
 }
 
 typealias BNFToken = Flexer.Token<BNFTokenKind>
@@ -33,6 +32,10 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 
     public init(string: String) {
         self.lexer = BasicTextCharacterLexer(string: string)
+    }
+
+    public var string: String {
+        return lexer.string
     }
 
     public mutating func next() -> Element? {
@@ -49,16 +52,12 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             return BNFToken(kind: .word, start: token, end: endingToken)
         case .singleQuote:
             _ = lexer.next()
-            _ = lexer.nextUntil(in: [.singleQuote])
-            let endingToken = lexer.next()
 
-            return BNFToken(kind: .terminalString, start: token, end: endingToken)
+            return BNFToken(kind: .quote, range: token.range)
         case .doubleQuote:
             _ = lexer.next()
-            _ = lexer.nextUntil(in: [.doubleQuote])
-            let endingToken = lexer.next()
 
-            return BNFToken(kind: .terminalString, start: token, end: endingToken)
+            return BNFToken(kind: .doubleQuote, range: token.range)
         case .comma:
             _ = lexer.next()
 
@@ -70,11 +69,55 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
         case .equals:
             _ = lexer.next()
             
-            return BNFToken(kind: .equals, range: token.range)
+            return BNFToken(kind: .assignment, range: token.range)
+        case .openBracket:
+            _ = lexer.next()
+
+            return BNFToken(kind: .openBracket, range: token.range)
+        case .closeBracket:
+            _ = lexer.next()
+
+            return BNFToken(kind: .closeBracket, range: token.range)
+        case .openBrace:
+            _ = lexer.next()
+
+            return BNFToken(kind: .openBrace, range: token.range)
+        case .closeBrace:
+            _ = lexer.next()
+
+            return BNFToken(kind: .closeBrace, range: token.range)
+        case .openParen:
+            _ = lexer.next()
+
+            return BNFToken(kind: .openParen, range: token.range)
+        case .closeParen:
+            _ = lexer.next()
+
+            return BNFToken(kind: .closeParen, range: token.range)
+        case .period:
+            _ = lexer.next()
+
+            return BNFToken(kind: .period, range: token.range)
         case .pipe:
             _ = lexer.next()
 
             return BNFToken(kind: .pipe, range: token.range)
+        case .question:
+            _ = lexer.next()
+
+            return BNFToken(kind: .question, range: token.range)
+        case .star:
+            _ = lexer.next()
+
+            return BNFToken(kind: .star, range: token.range)
+        case .otherCharacter:
+            _ = lexer.next()
+            
+            if string[token.range] == "→" {
+                return BNFToken(kind: .assignment, range: token.range)
+            }
+
+            return nil
         default:
             break
         }
