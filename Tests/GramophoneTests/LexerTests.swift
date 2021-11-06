@@ -1,7 +1,7 @@
 import XCTest
 @testable import Gramophone
 
-final class GramophoneTests: XCTestCase {
+final class LexerTests: XCTestCase {
     func testPunctuation() throws {
         let string = "=[],|;.→{}()?*'\"+"
         var lexer = BNFLexer(string: string)
