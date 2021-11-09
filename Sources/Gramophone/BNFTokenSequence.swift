@@ -106,3 +106,4 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 }
 
 typealias BNFLexer = LookAheadSequence<BNFTokenSequence>
+typealias BNFLexerReference = LookAheadSequenceReference<BNFTokenSequence>

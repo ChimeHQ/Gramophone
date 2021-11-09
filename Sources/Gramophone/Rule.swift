@@ -2,7 +2,7 @@ import Foundation
 
 public struct Rule {
     public enum Kind {
-        case concatination([Kind])
+        case concatenation([Kind])
         case termination
         case alternation([Kind])
         case optional
@@ -12,6 +12,7 @@ public struct Rule {
         case comment
         case specialSequence
         case exception
+        case reference(String)
     }
 
     public var name: String
