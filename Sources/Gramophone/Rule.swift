@@ -1,14 +1,14 @@
 import Foundation
 
 public struct Rule {
-    public enum Kind {
-        case concatenation([Kind])
+    public indirect enum Kind {
+        case concatenation(Kind, Kind)
         case termination
-        case alternation([Kind])
+        case alternation(Kind, Kind)
         case optional
         case repetition
         case grouping
-        case terminalString
+        case terminalString(String)
         case comment
         case specialSequence
         case exception

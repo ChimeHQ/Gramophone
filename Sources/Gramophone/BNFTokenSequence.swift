@@ -26,6 +26,14 @@ public enum BNFTokenKind {
 
 typealias BNFToken = Flexer.Token<BNFTokenKind>
 
+extension BNFToken {
+    public init?(kind: Kind, start: BasicTextCharacter, end: BasicTextCharacter?) {
+        let endIndex = end?.endIndex ?? start.endIndex
+
+        self.init(kind: kind, range: start.startIndex..<endIndex)
+    }
+}
+
 struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
     public typealias Element = BNFToken
 
