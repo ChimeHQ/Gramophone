@@ -87,6 +87,14 @@ public class BNFParser {
         return .alternation(leftNode, right)
     }
 
+    private func parseConcatenation(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
+        precondition(lexer.skipIf({ $0.kind == .comma }))
+
+        let right = try parsePrimaryExpression(lexer)
+
+        return .concatenation(leftNode, right)
+    }
+
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
         switch lexer.peek()?.kind {
         case .quote, .doubleQuote:
@@ -106,6 +114,8 @@ public class BNFParser {
             return leftNode
         case .pipe:
             return try parseAlternation(lexer, leftNode: leftNode)
+        case .comma:
+            return try parseConcatenation(lexer, leftNode: leftNode)
         default:
             throw BNFParserError.unexpectedToken
         }
