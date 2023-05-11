@@ -26,7 +26,7 @@ final class LexerTests: XCTestCase {
     }
 
     func testName() throws {
-        let string = "word CapsInWord word-with-dashes under_score a"
+        let string = "word CapsInWord word-with-dashes under_score a b"
         var lexer = BNFLexer(string: string)
 
         XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(0..<4), in: string))
@@ -34,5 +34,6 @@ final class LexerTests: XCTestCase {
         XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(16..<32), in: string))
         XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(33..<44), in: string))
         XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(45..<46), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(47..<48), in: string))
     }
 }

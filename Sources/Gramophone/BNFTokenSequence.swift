@@ -47,6 +47,13 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
         return lexer.string
     }
 
+	private var nameComponents: Set<BasicTextCharacterKind> = [
+		.lowercaseLetter,
+		.uppercaseLetter,
+		.dash,
+		.underscore
+	]
+
     public mutating func next() -> Element? {
         _ = lexer.nextUntil(notIn: [.space, .tab, .newline])
 
@@ -56,7 +63,12 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 
         switch token.kind {
         case .lowercaseLetter, .uppercaseLetter, .dash, .underscore:
-            let endingToken = lexer.nextUntil(notIn: [.lowercaseLetter, .uppercaseLetter, .dash, .underscore])
+			// this is because we have advanced instead of peeking, so a single character name will go too far
+			if let peek = lexer.peek()?.kind, nameComponents.contains(peek) == false {
+				return BNFToken(kind: .name, range: token.range)
+			}
+
+            let endingToken = lexer.nextUntil(notIn: nameComponents)
 
             return BNFToken(kind: .name, start: token, end: endingToken)
         case .singleQuote:
