@@ -24,6 +24,7 @@ concatenation = a, b, c;
 alternation = a | b | c;
 optional = [a, b];
 repetition = {a};
+grouping = (a, b, c);
 ```
 
 ## Usage

@@ -123,6 +123,20 @@ public class BNFParser {
 		return .repetition(rule)
 	}
 
+	private func parseGrouping(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		guard let _ = lexer.nextIf({ $0.kind == .openParen }) else {
+			throw BNFParserError.unexpectedToken
+		}
+
+		let rule = try parsePrimaryExpression(lexer)
+
+		guard let _ = lexer.nextIf({ $0.kind == .closeParen }) else {
+			throw BNFParserError.unexpectedToken
+		}
+
+		return .grouping(rule)
+	}
+
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
         switch lexer.peek()?.kind {
         case .quote, .doubleQuote:
@@ -133,6 +147,8 @@ public class BNFParser {
             return try parseReference(lexer)
 		case .openBrace:
 			return try parseRepetition(lexer)
+		case .openParen:
+			return try parseGrouping(lexer)
         default:
             throw BNFParserError.unexpectedToken
         }

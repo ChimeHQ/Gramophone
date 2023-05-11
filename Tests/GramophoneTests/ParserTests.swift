@@ -2,6 +2,32 @@ import XCTest
 @testable import Gramophone
 
 final class ParserTests: XCTestCase {
+	func testAssignment() throws {
+		let string = "test = 'a';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .terminalString("a"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
+	func testAssignmentWithArrow() throws {
+		let string = "test → 'a';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .terminalString("a"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
     func testAlternation() throws {
         let string = "test = 'a' | 'b';"
         let parser = BNFParser()
@@ -51,6 +77,19 @@ final class ParserTests: XCTestCase {
 
 		let expectedRule = Rule(name: "test",
 								kind: .repetition(.terminalString("a")))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
+	func testGrouping() throws {
+		let string = "test = ('a');"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .grouping(.terminalString("a")))
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 }

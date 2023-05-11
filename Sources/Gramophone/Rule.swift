@@ -7,8 +7,9 @@ public struct Rule {
         case alternation(Kind, Kind)
         case optional(Kind)
         case repetition(Kind)
-        case grouping
+        case grouping(Kind)
         case terminalString(String)
+		case oneOrMore
         case comment
         case specialSequence
         case exception
