@@ -67,6 +67,19 @@ final class ParserTests: XCTestCase {
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 
+	func testTailingOptional() throws {
+		let string = "a = b?;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRules = [
+			Rule(name: "a", kind: .optional(.reference("b"))),
+		]
+
+		XCTAssertEqual(rules, expectedRules)
+	}
+
 	func testRepetition() throws {
 		let string = "test = {'a'};"
 		let parser = BNFParser()

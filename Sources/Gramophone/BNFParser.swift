@@ -172,6 +172,10 @@ public class BNFParser {
             _ = lexer.next()
 
             return leftNode
+		case .question:
+			_ = lexer.next()
+			
+			return .optional(leftNode)
         case .pipe:
             return try parseAlternation(lexer, leftNode: leftNode)
         case .comma:
