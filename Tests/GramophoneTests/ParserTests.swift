@@ -162,4 +162,17 @@ extension ParserTests {
 		
 		XCTAssertEqual(rules, expectedRules)
 	}
+
+	func testConcatentionWithinRepetition() throws {
+		let string = "a = {a, b};"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRules = [
+			Rule(name: "a", kind: .repetition(.concatenation(.reference("a"), .reference("b"))))
+		]
+
+		XCTAssertEqual(rules, expectedRules)
+	}
 }

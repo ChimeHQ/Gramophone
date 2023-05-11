@@ -112,7 +112,7 @@ public class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		let rule = try parsePrimaryExpression(lexer)
+		let rule = try parseExpression(lexer)
 
 		guard let _ = lexer.nextIf({ $0.kind == .closeBracket }) else {
 			throw BNFParserError.unexpectedToken
@@ -126,13 +126,13 @@ public class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		let rule = try parsePrimaryExpression(lexer)
+		let exp = try parseExpression(lexer)
 
 		guard let _ = lexer.nextIf({ $0.kind == .closeBrace }) else {
 			throw BNFParserError.unexpectedToken
 		}
 
-		return .repetition(rule)
+		return .repetition(exp)
 	}
 
 	private func parseGrouping(_ lexer: BNFLexerReference) throws -> Rule.Kind {
@@ -140,13 +140,13 @@ public class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		let rule = try parsePrimaryExpression(lexer)
+		let kind = try parseExpression(lexer)
 
 		guard let _ = lexer.nextIf({ $0.kind == .closeParen }) else {
 			throw BNFParserError.unexpectedToken
 		}
 
-		return .grouping(rule)
+		return .grouping(kind)
 	}
 
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
@@ -166,7 +166,7 @@ public class BNFParser {
         }
     }
 
-    private func parseRuleExpression(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
+    private func parseRuleExpression(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind? {
         switch lexer.peek()?.kind {
         case .semicolon:
             _ = lexer.next()
@@ -180,10 +180,20 @@ public class BNFParser {
             return try parseAlternation(lexer, leftNode: leftNode)
         case .comma:
             return try parseConcatenation(lexer, leftNode: leftNode)
+		case .closeBrace, .closeParen, .closeBracket:
+			return nil
         default:
             throw BNFParserError.unexpectedToken
         }
     }
+
+	private func parseExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		let start = try parsePrimaryExpression(lexer)
+
+		let sub = try parseRuleExpression(lexer, leftNode: start)
+
+		return sub ?? start
+	}
 
     private func parseRuleDefinition(_ lexer: BNFLexerReference) throws -> Rule {
         let name = try lexer.nextName()
@@ -192,10 +202,8 @@ public class BNFParser {
             throw BNFParserError.unexpectedToken
         }
 
-        let start = try parsePrimaryExpression(lexer)
+        let exp = try parseExpression(lexer)
 
-        let kind = try parseRuleExpression(lexer, leftNode: start)
-
-        return Rule(name: name, kind: kind)
+        return Rule(name: name, kind: exp)
     }
 }
