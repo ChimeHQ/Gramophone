@@ -51,7 +51,8 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 		.lowercaseLetter,
 		.uppercaseLetter,
 		.dash,
-		.underscore
+		.underscore,
+		.digit
 	]
 
     public mutating func next() -> Element? {
@@ -62,7 +63,7 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
         }
 
         switch token.kind {
-        case .lowercaseLetter, .uppercaseLetter, .dash, .underscore:
+		case .lowercaseLetter, .uppercaseLetter, .dash, .underscore, .digit:
 			// this is because we have advanced instead of peeking, so a single character name will go too far
 			if let peek = lexer.peek()?.kind, nameComponents.contains(peek) == false {
 				return BNFToken(kind: .name, range: token.range)

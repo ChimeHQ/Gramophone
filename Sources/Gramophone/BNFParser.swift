@@ -52,7 +52,19 @@ public class BNFParser {
     private func parseReference(_ lexer: BNFLexerReference) throws -> Rule.Kind {
         let name = try lexer.nextName()
 
-        return Rule.Kind.reference(name)
+		guard name == "U" else {
+			return Rule.Kind.reference(name)
+		}
+
+		guard lexer.nextIf({ $0.kind == .plus }) != nil else {
+			return Rule.Kind.reference(name)
+		}
+
+		let numericName = try lexer.nextName()
+		let value = UInt32(numericName, radix: 16)!
+		let scalar = UnicodeScalar(value)!
+
+		return Rule.Kind.terminalString(String(scalar))
     }
 
     private func parseSingleQuoteTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {

@@ -15,8 +15,8 @@ final class ParserTests: XCTestCase {
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 
-	func testAssignmentWithArrow() throws {
-		let string = "test → 'a';"
+	func testReference() throws {
+		let string = "test = something;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
@@ -24,7 +24,7 @@ final class ParserTests: XCTestCase {
 		XCTAssertEqual(rules.count, 1)
 
 		let expectedRule = Rule(name: "test",
-								kind: .terminalString("a"))
+								kind: .reference("something"))
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 
@@ -90,6 +90,47 @@ final class ParserTests: XCTestCase {
 
 		let expectedRule = Rule(name: "test",
 								kind: .grouping(.terminalString("a")))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+}
+
+extension ParserTests {
+	func testAssignmentWithArrow() throws {
+		let string = "test → 'a';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .terminalString("a"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
+	func testEmptyCodePoint() throws {
+		let string = "test = U+0000;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .terminalString("\u{0000}"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
+	func testFiveDigitCodePoint() throws {
+		let string = "test = U+1F34E;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .terminalString("🍎"))
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 }

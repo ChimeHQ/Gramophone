@@ -19,12 +19,17 @@ dependencies: [
 ## Supported Syntax
 
 ```
-definition = 'value';
+single_quote_terminal = 'value';
+double_quote_terminal = "value";
+unicode_scalar = U+0000;
+
 concatenation = a, b, c;
 alternation = a | b | c;
 optional = [a, b];
 repetition = {a};
 grouping = (a, b, c);
+
+arrow_assigment → a;
 ```
 
 ## Usage
