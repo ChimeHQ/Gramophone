@@ -5,7 +5,7 @@ public struct Rule {
         case concatenation(Kind, Kind)
         case termination
         case alternation(Kind, Kind)
-        case optional
+        case optional(Kind)
         case repetition
         case grouping
         case terminalString(String)
