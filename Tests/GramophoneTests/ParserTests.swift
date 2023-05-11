@@ -134,3 +134,19 @@ extension ParserTests {
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 }
+
+extension ParserTests {
+	func testMultipleRules() throws {
+		let string = "a = 'a';b = 'b';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRules = [
+			Rule(name: "a", kind: .terminalString("a")),
+			Rule(name: "b", kind: .terminalString("b")),
+		]
+		
+		XCTAssertEqual(rules, expectedRules)
+	}
+}
