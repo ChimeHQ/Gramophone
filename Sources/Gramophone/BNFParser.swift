@@ -49,7 +49,7 @@ public class BNFParser {
         return .success(rules)
     }
 
-    private func parseReference(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+    private func parseReferenceOrUnicodeScalar(_ lexer: BNFLexerReference) throws -> Rule.Kind {
         let name = try lexer.nextName()
 
 		guard name == "U" else {
@@ -156,7 +156,7 @@ public class BNFParser {
 		case .openBracket:
 			return try parseOptional(lexer)
         case .name:
-            return try parseReference(lexer)
+            return try parseReferenceOrUnicodeScalar(lexer)
 		case .openBrace:
 			return try parseRepetition(lexer)
 		case .openParen:
