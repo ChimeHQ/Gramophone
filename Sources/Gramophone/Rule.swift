@@ -6,7 +6,7 @@ public struct Rule {
         case termination
         case alternation(Kind, Kind)
         case optional(Kind)
-        case repetition
+        case repetition(Kind)
         case grouping
         case terminalString(String)
         case comment

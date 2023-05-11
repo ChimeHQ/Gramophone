@@ -40,4 +40,17 @@ final class ParserTests: XCTestCase {
 								kind: .concatenation(.optional(.terminalString("-")), .terminalString("a")))
 		XCTAssertEqual(rules[0], expectedRule)
 	}
+
+	func testRepetition() throws {
+		let string = "test = {'a'};"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .repetition(.terminalString("a")))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
 }

@@ -96,17 +96,31 @@ public class BNFParser {
     }
 
 	private func parseOptional(_ lexer: BNFLexerReference) throws -> Rule.Kind {
-		guard let start = lexer.nextIf({ $0.kind == .openBracket }) else {
+		guard let _ = lexer.nextIf({ $0.kind == .openBracket }) else {
 			throw BNFParserError.unexpectedToken
 		}
 
 		let rule = try parsePrimaryExpression(lexer)
 
-		guard let start = lexer.nextIf({ $0.kind == .closeBracket }) else {
+		guard let _ = lexer.nextIf({ $0.kind == .closeBracket }) else {
 			throw BNFParserError.unexpectedToken
 		}
 
 		return .optional(rule)
+	}
+
+	private func parseRepetition(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		guard let _ = lexer.nextIf({ $0.kind == .openBrace }) else {
+			throw BNFParserError.unexpectedToken
+		}
+
+		let rule = try parsePrimaryExpression(lexer)
+
+		guard let _ = lexer.nextIf({ $0.kind == .closeBrace }) else {
+			throw BNFParserError.unexpectedToken
+		}
+
+		return .repetition(rule)
 	}
 
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
@@ -117,6 +131,8 @@ public class BNFParser {
 			return try parseOptional(lexer)
         case .name:
             return try parseReference(lexer)
+		case .openBrace:
+			return try parseRepetition(lexer)
         default:
             throw BNFParserError.unexpectedToken
         }

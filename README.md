@@ -16,6 +16,16 @@ dependencies: [
 ]
 ```
 
+## Supported Syntax
+
+```
+definition = 'value';
+concatenation = a, b, c;
+alternation = a | b | c;
+optional = [a, b];
+repetition = {a};
+```
+
 ## Usage
 
 ```swift
