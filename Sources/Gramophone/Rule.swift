@@ -11,7 +11,7 @@ public struct Rule {
 		case oneOrMore
         case comment
         case specialSequence
-        case exception
+        case exception(Kind, Kind)
         case reference(String)
     }
 
@@ -38,6 +38,8 @@ extension Rule.Kind: CustomStringConvertible {
 			return "'\(value)'"
 		case let .reference(value):
 			return value
+		case let .exception(a, b):
+			return "\(a) - \(b)"
 		default:
 			return ""
 		}

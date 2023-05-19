@@ -3,7 +3,7 @@ import XCTest
 
 final class LexerTests: XCTestCase {
     func testPunctuation() throws {
-        let string = "=[],|;.→{}()?*'\"+:"
+        let string = "=[],|;.→{}()?*'\"+:-"
         var lexer = BNFLexer(string: string)
 
         XCTAssertEqual(lexer.next(), BNFToken(kind: .assignment, range: NSRange(0..<1), in: string))
@@ -24,20 +24,19 @@ final class LexerTests: XCTestCase {
         XCTAssertEqual(lexer.next(), BNFToken(kind: .doubleQuote, range: NSRange(15..<16), in: string))
         XCTAssertEqual(lexer.next(), BNFToken(kind: .plus, range: NSRange(16..<17), in: string))
 		XCTAssertEqual(lexer.next(), BNFToken(kind: .colon, range: NSRange(17..<18), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .minus, range: NSRange(18..<19), in: string))
     }
 
     func testName() throws {
-        let string = "word CapsInWord word-with-dashes under_score a b 123 a111"
+        let string = "word CapsInWord under_score a b 123 a111"
         var lexer = BNFLexer(string: string)
 
         XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(0..<4), in: string))
         XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(5..<15), in: string))
-        XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(16..<32), in: string))
-        XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(33..<44), in: string))
-        XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(45..<46), in: string))
-		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(47..<48), in: string))
-		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(49..<52), in: string))
-		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(53..<57), in: string))
-		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(58..<63), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(16..<27), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(28..<29), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(30..<31), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(32..<35), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(36..<40), in: string))
     }
 }

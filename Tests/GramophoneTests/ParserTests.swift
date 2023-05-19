@@ -146,6 +146,20 @@ final class ParserTests: XCTestCase {
 								kind: .grouping(.terminalString("a")))
 		XCTAssertEqual(rules[0], expectedRule)
 	}
+
+	func testException() throws {
+		let string = "test = a - b;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .exception(.reference("a"), .reference("b")))
+		XCTAssertEqual(rules[0], expectedRule)
+
+	}
 }
 
 extension ParserTests {

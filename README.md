@@ -30,6 +30,7 @@ optional = [a, b];
 tailing_optional = a?;
 repetition = {a};
 grouping = (a, b, c);
+exception = a - b;
 
 arrow_assigment → a;
 colon_colon_equals_assigment ::= a;
