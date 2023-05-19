@@ -21,7 +21,10 @@ extension BNFLexerReference {
     }
 }
 
-public class BNFParser {
+public final class BNFParser {
+	public init() {
+	}
+	
     public func parse(_ string: String) -> Result<[Rule], Error> {
         if string.isEmpty {
             return .failure(BNFParserError.emptyInput)
