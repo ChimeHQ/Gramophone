@@ -4,7 +4,7 @@
 
 # Gramophone
 
-Swift library for parsing [Extended Backus–Naur Form]() (EBNF) notation.
+Swift library for parsing [Extended Backus–Naur Form][ebnf] (EBNF) notation.
 
 ## Integration
 
@@ -53,3 +53,4 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 [license badge]: https://img.shields.io/github/license/ChimeHQ/Gramophone
 [platforms]: https://swiftpackageindex.com/ChimeHQ/Gramophone
 [platforms badge]: https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2FChimeHQ%2FGramophone%2Fbadge%3Ftype%3Dplatforms
+[ebnf]: https://en.wikipedia.org/wiki/Extended_Backus–Naur_form
