@@ -195,10 +195,26 @@ public class BNFParser {
 		return sub ?? start
 	}
 
+	func parseAssignmentOperator(_ lexer: BNFLexerReference) throws -> Bool {
+		if lexer.skipIf({ $0.kind == .assignment }) {
+			return true
+		}
+
+		guard lexer.skipIf({ $0.kind == .colon }) else {
+			return false
+		}
+
+		guard lexer.skipIf({ $0.kind == .colon }) else {
+			return false
+		}
+
+		return lexer.skipIf({ $0.kind == .assignment })
+	}
+
     private func parseRuleDefinition(_ lexer: BNFLexerReference) throws -> Rule {
         let name = try lexer.nextName()
 
-        guard lexer.skipIf({ $0.kind == .assignment }) else {
+        guard try parseAssignmentOperator(lexer) else {
             throw BNFParserError.unexpectedToken
         }
 

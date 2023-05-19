@@ -15,6 +15,19 @@ final class ParserTests: XCTestCase {
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 
+	func testBNFStyleAssignment() throws {
+		let string = "test ::= abc;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .reference("abc"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
 	func testReference() throws {
 		let string = "test = something;"
 		let parser = BNFParser()

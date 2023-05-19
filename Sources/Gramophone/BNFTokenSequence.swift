@@ -104,6 +104,8 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             return BNFToken(kind: .star, range: token.range)
         case .plus:
             return BNFToken(kind: .plus, range: token.range)
+		case .colon:
+			return BNFToken(kind: .colon, range: token.range)
         case .otherCharacter:
             if string[token.range] == "→" {
                 return BNFToken(kind: .assignment, range: token.range)
