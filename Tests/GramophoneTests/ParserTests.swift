@@ -41,6 +41,21 @@ final class ParserTests: XCTestCase {
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 
+	func testBNFStyleReference() throws {
+		throw XCTSkip()
+		
+		let string = "test = <something>;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .reference("<something>"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
     func testAlternation() throws {
         let string = "test = 'a' | 'b';"
         let parser = BNFParser()
@@ -215,6 +230,5 @@ extension ParserTests {
 		let expectedRule = Rule(name: "test",
 								kind: .alternation(.concatenation(.reference("a"), .reference("b")), .reference("c")))
 		XCTAssertEqual(rules[0], expectedRule)
-
 	}
 }

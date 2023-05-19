@@ -24,12 +24,15 @@ double_quote_terminal = "value";
 unicode_scalar = U+0000;
 
 concatenation = a, b, c;
+implicit_concatenation = a b c;
 alternation = a | b | c;
 optional = [a, b];
+tailing_optional = a?;
 repetition = {a};
 grouping = (a, b, c);
 
 arrow_assigment → a;
+colon_colon_equals_assigment ::= a;
 ```
 
 ## Usage

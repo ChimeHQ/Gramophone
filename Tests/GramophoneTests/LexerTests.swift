@@ -38,5 +38,6 @@ final class LexerTests: XCTestCase {
 		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(47..<48), in: string))
 		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(49..<52), in: string))
 		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(53..<57), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .name, range: NSRange(58..<63), in: string))
     }
 }
