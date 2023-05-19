@@ -100,7 +100,7 @@ public class BNFParser {
     }
 
     private func parseConcatenation(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
-        precondition(lexer.skipIf({ $0.kind == .comma }))
+        _ = lexer.skipIf({ $0.kind == .comma })
 
         let right = try parsePrimaryExpression(lexer)
 
@@ -178,7 +178,7 @@ public class BNFParser {
 			return .optional(leftNode)
         case .pipe:
             return try parseAlternation(lexer, leftNode: leftNode)
-        case .comma:
+		case .comma, .name, .quote, .doubleQuote:
             return try parseConcatenation(lexer, leftNode: leftNode)
 		case .closeBrace, .closeParen, .closeBracket:
 			return nil
