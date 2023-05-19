@@ -202,3 +202,19 @@ extension ParserTests {
 		XCTAssertEqual(rules, expectedRules)
 	}
 }
+
+extension ParserTests {
+	func testConcatenationAlternationPrecedence() throws {
+		let string = "test = a b | c;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .alternation(.concatenation(.reference("a"), .reference("b")), .reference("c")))
+		XCTAssertEqual(rules[0], expectedRule)
+
+	}
+}

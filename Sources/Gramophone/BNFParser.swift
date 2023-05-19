@@ -168,10 +168,6 @@ public class BNFParser {
 
     private func parseRuleExpression(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind? {
         switch lexer.peek()?.kind {
-        case .semicolon:
-            _ = lexer.next()
-
-            return leftNode
 		case .question:
 			_ = lexer.next()
 			
@@ -190,9 +186,21 @@ public class BNFParser {
 	private func parseExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
 		let start = try parsePrimaryExpression(lexer)
 
-		let sub = try parseRuleExpression(lexer, leftNode: start)
+		var ending = start
 
-		return sub ?? start
+		while true {
+			if lexer.skipIf({ $0.kind == .semicolon }) {
+				break
+			}
+
+			guard let sub = try parseRuleExpression(lexer, leftNode: ending) else {
+				break
+			}
+
+			ending = sub
+		}
+
+		return ending
 	}
 
 	func parseAssignmentOperator(_ lexer: BNFLexerReference) throws -> Bool {
