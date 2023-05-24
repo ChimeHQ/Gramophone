@@ -28,6 +28,19 @@ final class ParserTests: XCTestCase {
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 
+	func testBackslashTerminal() throws {
+		let string = "test = '\\';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .terminalString("\\"))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
 	func testReference() throws {
 		let string = "test = something;"
 		let parser = BNFParser()
@@ -226,6 +239,19 @@ extension ParserTests {
 
 		let expectedRules = [
 			Rule(name: "a", kind: .repetition(.concatenation(.reference("a"), .reference("b"))))
+		]
+
+		XCTAssertEqual(rules, expectedRules)
+	}
+
+	func testConcatentionWithGrouping() throws {
+		let string = "a = b {c};"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRules = [
+			Rule(name: "a", kind: .concatenation(.reference("b"), .repetition(.reference("c")))),
 		]
 
 		XCTAssertEqual(rules, expectedRules)

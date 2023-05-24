@@ -187,7 +187,7 @@ public final class BNFParser {
 			return .optional(leftNode)
         case .pipe:
             return try parseAlternation(lexer, leftNode: leftNode)
-		case .comma, .name, .quote, .doubleQuote:
+		case .comma, .name, .quote, .doubleQuote, .openBrace:
             return try parseConcatenation(lexer, leftNode: leftNode)
 		case .minus:
 			return try parseException(lexer, leftNode: leftNode)

@@ -123,7 +123,11 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
                                                .lowercaseLetter,
                                                .uppercaseLetter,
                                                .underscore,
-                                               .digit])
+                                               .digit,
+											   .openBrace,
+											   .closeBrace,
+											   .doubleQuote,
+											   .singleQuote])
 
         return BNFToken(kind: .name, start: token, end: endingToken)
     }

@@ -40,6 +40,10 @@ extension Rule.Kind: CustomStringConvertible {
 			return value
 		case let .exception(a, b):
 			return "\(a) - \(b)"
+		case let .repetition(value):
+			return "{\(value)}"
+		case let .grouping(value):
+			return "(\(value))"
 		default:
 			return ""
 		}
