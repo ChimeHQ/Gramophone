@@ -4,7 +4,7 @@
 
 # Gramophone
 
-Swift library for parsing [Extended Backus–Naur Form][ebnf] (EBNF) notation.
+Swift library for working with [Extended Backus–Naur Form][ebnf] (EBNF) notation and the resulting grammars.
 
 ## Integration
 
@@ -39,7 +39,9 @@ colon_colon_equals_assigment ::= a;
 ## Usage
 
 ```swift
-let result = parser.parse("test = 'a' | 'b';")
+let rules = try parser.parse("test = 'a' | 'b';").get()
+
+let firsts = Grammar(rules: rules).firsts
 ```
 
 ## Suggestions or Feedback
