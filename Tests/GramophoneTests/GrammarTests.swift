@@ -2,7 +2,7 @@ import XCTest
 import Gramophone
 
 final class GrammarTests: XCTestCase {
-	func testSingleTerminalFirstCalculations() {
+	func testFirstsFromSingleTerminal() {
 		let rules = [
 			Rule(name: "a", kind: .terminalString("a"))
 		]
@@ -12,10 +12,10 @@ final class GrammarTests: XCTestCase {
 			"a": [.string("a")],
 		]
 
-		XCTAssertEqual(grammar.firsts, expected)
+		XCTAssertEqual(grammar.firstMap, expected)
 	}
 
-	func testFollowsSingleReference() {
+	func testFirstsFromReference() {
 		let rules = [
 			Rule(name: "a", kind: .terminalString("a")),
 			Rule(name: "b", kind: .reference("a"))
@@ -27,10 +27,10 @@ final class GrammarTests: XCTestCase {
 			"b": [.string("a")],
 		]
 
-		XCTAssertEqual(grammar.firsts, expected)
+		XCTAssertEqual(grammar.firstMap, expected)
 	}
 
-	func testFollowsDoubleReference() {
+	func testFirstsFromDoubleReference() {
 		let rules = [
 			Rule(name: "a", kind: .terminalString("a")),
 			Rule(name: "b", kind: .reference("c")),
@@ -44,6 +44,21 @@ final class GrammarTests: XCTestCase {
 			"c": [.string("a")],
 		]
 
-		XCTAssertEqual(grammar.firsts, expected)
+		XCTAssertEqual(grammar.firstMap, expected)
+	}
+}
+
+extension GrammarTests {
+	func testFollowFromSingleTerminal() {
+		let rules = [
+			Rule(name: "a", kind: .terminalString("a"))
+		]
+
+		let grammar = Grammar(rules: rules)
+		let expected: Grammar.FollowMap = [
+			"a": [],
+		]
+
+		XCTAssertEqual(grammar.followMap, expected)
 	}
 }

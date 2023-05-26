@@ -4,6 +4,7 @@ import Foundation
 public struct Grammar {
 	public typealias RuleMap = [String: Rule]
 	public typealias FirstMap = [String: Set<Terminal>]
+	public typealias FollowMap = FirstMap
 
 	public let rules: RuleMap
 
@@ -52,8 +53,8 @@ extension Grammar {
 		}
 	}
 
-	/// Compute the map of rule names to first terminal sets.
-	public var firsts: FirstMap {
+	/// Compute the map of rule names to FIRST terminal sets.
+	public var firstMap: FirstMap {
 		var firstMap = FirstMap()
 
 		for rule in rules.values {
@@ -67,5 +68,18 @@ extension Grammar {
 		}
 
 		return firstMap
+	}
+}
+
+extension Grammar {
+	/// Compute the map of rule names to FOLLOW terminal sets.
+	public var followMap: FollowMap {
+		var followMap = FollowMap()
+
+		for rule in rules.values {
+			followMap[rule.name] = []
+		}
+
+		return followMap
 	}
 }

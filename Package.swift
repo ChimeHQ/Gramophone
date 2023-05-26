@@ -7,7 +7,7 @@ let package = Package(
 	platforms: [.macOS(.v10_12), .iOS(.v10)],
     products: [
         .library(name: "Gramophone", targets: ["Gramophone"]),
-		.executable(name: "gramophone", targets: ["CLITool"]),
+//		.executable(name: "gramophone", targets: ["CLITool"]),
     ],
     dependencies: [
         .package(url: "https://github.com/ChimeHQ/Flexer", .branch("main")),
@@ -19,6 +19,6 @@ let package = Package(
         .testTarget(
             name: "GramophoneTests",
             dependencies: ["Gramophone"]),
-		.executableTarget(name: "CLITool", dependencies: ["Gramophone"]),
+//		.executableTarget(name: "CLITool", dependencies: ["Gramophone"]),
     ]
 )
