@@ -55,31 +55,41 @@ extension Grammar {
 
 	/// Compute the map of rule names to FIRST terminal sets.
 	public var firstMap: FirstMap {
-		var firstMap = FirstMap()
+		var firsts = FirstMap()
 
 		for rule in rules.values {
-			if firstMap[rule.name]?.isEmpty == false {
+			if firsts[rule.name]?.isEmpty == false {
 				continue
 			}
 
-			let firsts = computeFirsts(of: rule.kind, map: &firstMap)
+			let ruleFirsts = computeFirsts(of: rule.kind, map: &firsts)
 
-			firstMap[rule.name] = firsts
+			firsts[rule.name] = ruleFirsts
 		}
 
-		return firstMap
+		return firsts
 	}
 }
 
 extension Grammar {
+	private func computeFollows(of kind: Rule.Kind, map: inout FirstMap) -> Set<Terminal> {
+		return []
+	}
+
 	/// Compute the map of rule names to FOLLOW terminal sets.
 	public var followMap: FollowMap {
-		var followMap = FollowMap()
+		var follows = FollowMap()
 
 		for rule in rules.values {
-			followMap[rule.name] = []
+			if follows[rule.name]?.isEmpty == false {
+				continue
+			}
+
+			let ruleFollows = computeFollows(of: rule.kind, map: &follows)
+
+			follows[rule.name] = ruleFollows
 		}
 
-		return followMap
+		return follows
 	}
 }
