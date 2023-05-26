@@ -17,6 +17,11 @@ public struct Rule {
 
     public var name: String
     public var kind: Kind
+
+	public init(name: String, kind: Kind) {
+		self.name = name
+		self.kind = kind
+	}
 }
 
 extension Rule.Kind: Hashable {
