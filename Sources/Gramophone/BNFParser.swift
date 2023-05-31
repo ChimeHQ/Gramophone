@@ -24,7 +24,15 @@ extension BNFLexerReference {
 public final class BNFParser {
 	public init() {
 	}
-	
+
+	/// Parse the input text and return a `Grammar` value.
+	public func parseGrammar(_ string: String) throws -> Grammar {
+		let rules = try parse(string).get()
+
+		return Grammar(rules: rules)
+	}
+
+	/// Parse the input text and return an array of `Rule` values or error.
     public func parse(_ string: String) -> Result<[Rule], Error> {
         if string.isEmpty {
             return .failure(BNFParserError.emptyInput)

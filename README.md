@@ -6,6 +6,12 @@
 
 Swift library for working with [Extended Backus–Naur Form][ebnf] (EBNF) notation and the resulting grammars.
 
+Features:
+- Accepts a variety of BNF syntaxes
+- Computes FIRST and FOLLOW sets
+
+⚠️ This library is still a work-in-progress. It definitely still has some issues.
+
 ## Integration
 
 ### Swift Package Manager
@@ -39,9 +45,10 @@ colon_colon_equals_assigment ::= a;
 ## Usage
 
 ```swift
-let rules = try parser.parse("test = 'a' | 'b';").get()
+let grammar = try parser.parseGrammar("test = 'a' | 'b';")
 
-let firsts = Grammar(rules: rules).firsts
+let firstMap = grammar.computeFirstMap()
+let followMap = grammar.computeFollowMap()
 ```
 
 ## Suggestions or Feedback

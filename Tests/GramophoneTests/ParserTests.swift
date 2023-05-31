@@ -245,6 +245,21 @@ extension ParserTests {
 	}
 
 	func testConcatentionWithGrouping() throws {
+		throw XCTSkip()
+		
+		let string = "a = b (c);"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRules = [
+			Rule(name: "a", kind: .concatenation(.reference("b"), .grouping(.reference("c")))),
+		]
+
+		XCTAssertEqual(rules, expectedRules)
+	}
+
+	func testConcatenationWithRepetition() throws {
 		let string = "a = b {c};"
 		let parser = BNFParser()
 
@@ -255,6 +270,7 @@ extension ParserTests {
 		]
 
 		XCTAssertEqual(rules, expectedRules)
+
 	}
 }
 
@@ -269,6 +285,21 @@ extension ParserTests {
 
 		let expectedRule = Rule(name: "test",
 								kind: .alternation(.concatenation(.reference("a"), .reference("b")), .reference("c")))
+		XCTAssertEqual(rules[0], expectedRule)
+	}
+
+	func testAlternationConcatenationPrecedence() throws {
+		throw XCTSkip()
+		
+		let string = "test = a | b c;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		XCTAssertEqual(rules.count, 1)
+
+		let expectedRule = Rule(name: "test",
+								kind: .alternation(.reference("a"), .concatenation(.reference("b"), .reference("c"))))
 		XCTAssertEqual(rules[0], expectedRule)
 	}
 }
