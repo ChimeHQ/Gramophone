@@ -4,16 +4,43 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - 'README.md'
+      - 'CODE_OF_CONDUCT.md'
+      - '.editorconfig'
+      - '.spi.yml'
   pull_request:
     branches:
-      - '**'
+      - main
 
 jobs:
-  test:
-    name: Test
-    runs-on: macOS-latest
+  test_macos_13:
+    name: Test macOS 13
+    runs-on: macOS-13
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: test
       run: swift test
+
+  test_macos_13:
+    name: Test macOS 14
+    runs-on: macOS-14
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: test
+      run: swift test
+
+  test_linux:
+    name: Test Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install swiftly
+        run: curl -L https://swift-server.github.io/swiftly/swiftly-install.sh | bash -s -- -y
+      - name: Install the latest Swift toolchain
+        run: swiftly install latest
+      - name: Test
+        run: swift test
