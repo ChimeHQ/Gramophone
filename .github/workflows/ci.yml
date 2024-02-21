@@ -17,13 +17,12 @@ jobs:
   test_macos_13:
     name: Test macOS 13
     runs-on: macOS-13
-    
     steps:
     - uses: actions/checkout@v4
     - name: test
       run: swift test
 
-  test_macos_13:
+  test_macos_14:
     name: Test macOS 14
     runs-on: macOS-14
     
