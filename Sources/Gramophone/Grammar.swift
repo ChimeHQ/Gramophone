@@ -151,6 +151,8 @@ extension Grammar {
 		followMap["all"] = Set()
 
 		// step 2A: A -> αΒβ
+		// FIRST(β) (except for ε) added to FOLLOW(B)
+		//
 		// Find all of the primary follow patterns (.terminalString and .reference), and track any that have a first of epsilon.
 		let firsts = computeFirstMap()
 		var epsilonFollows = [String: Set<String>]()
@@ -185,6 +187,7 @@ extension Grammar {
 		// step 3: copy follows
 		//  A -> αΒ
 		//  A -> αΒβ where FIRST(β) contains ε
+		//  FOLLOW(A) added to FOLLOW(B)
 		//
 		// This is the trickiest part.
 
