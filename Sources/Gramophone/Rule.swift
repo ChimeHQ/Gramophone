@@ -1,7 +1,7 @@
 import Foundation
 
 public struct Rule {
-    public indirect enum Kind {
+	public indirect enum Kind {
         case concatenation(Kind, Kind)
         case alternation(Kind, Kind)
         case optional(Kind)
@@ -26,10 +26,10 @@ public struct Rule {
 	}
 }
 
-extension Rule.Kind: Hashable {
+extension Rule.Kind: Sendable, Hashable {
 }
 
-extension Rule: Hashable {
+extension Rule: Sendable, Hashable {
 }
 
 extension Rule.Kind: CustomStringConvertible {
