@@ -14,17 +14,12 @@ on:
       - main
 
 jobs:
-  test_macos_13:
-    name: Test macOS 13
-    runs-on: macOS-13
-    steps:
-    - uses: actions/checkout@v4
-    - name: test
-      run: swift test
-
-  test_macos_14:
-    name: Test macOS 14
-    runs-on: macOS-14
+  test_macos:
+    name: Test macOS 15
+    runs-on: macOS-15
+    timeout-minutes: 10
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_16.1.app
     steps:
     - uses: actions/checkout@v4
     - name: test
