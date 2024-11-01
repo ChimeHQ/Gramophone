@@ -195,6 +195,28 @@ extension ParserTests {
 
 		#expect(rules == [Rule("test", kind: "🍎")])
 	}
+
+	@Test
+	func newlines() throws {
+		let string = """
+test = 'a';
+"""
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: "a")])
+	}
+
+	@Test
+	func doubleQuoteTerminal() throws {
+		let string = "test = \"a\";"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: "a")])
+	}
 }
 
 extension ParserTests {
@@ -283,5 +305,14 @@ extension ParserTests {
 			kind: .alternation(.reference("a"), .concatenation(.reference("b"), .reference("c")))
 		)
 		#expect(rules == [expectedRule])
+	}
+
+	@Test
+	func stuff() throws {
+		let string = """
+letter = "A" | "B";
+"""
+
+		_ = try BNFParser().parse(string).get()
 	}
 }

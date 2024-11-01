@@ -92,29 +92,33 @@ public final class BNFParser {
 		return Rule.Kind.reference(name)
 	}
 
-    private func parseSingleQuoteTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {
-        guard let start = lexer.nextIf({ $0.kind == .quote }) else {
-            throw BNFParserError.unexpectedToken
-        }
+	private func parseQuotedTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		guard let expectedQuote = lexer.peek()?.kind else {
+			throw BNFParserError.unexpectedToken
+		}
 
-        guard let _ = lexer.nextUntil({ $0.kind == .quote }) else {
-            throw BNFParserError.missingCloseQuote
-        }
+		guard let start = lexer.nextIf({ $0.kind == expectedQuote }) else {
+			throw BNFParserError.unexpectedToken
+		}
 
-        guard let end = lexer.next() else {
-            throw BNFParserError.unexpectedToken
-        }
-        
-        let contentRange = start.range.upperBound..<end.range.lowerBound
+		guard let _ = lexer.nextUntil({ $0.kind == expectedQuote }) else {
+			throw BNFParserError.missingCloseQuote
+		}
 
-        let name = String(lexer.string[contentRange])
+		guard let end = lexer.next() else {
+			throw BNFParserError.unexpectedToken
+		}
 
-        return .terminalString(name)
-    }
+		let contentRange = start.range.upperBound..<end.range.lowerBound
 
-    private func parseTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {
-        return try parseSingleQuoteTerminal(lexer)
-    }
+		let name = String(lexer.string[contentRange])
+
+		return .terminalString(name)
+	}
+
+	private func parseTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		return try parseQuotedTerminal(lexer)
+	}
 
     private func parseAlternation(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
         precondition(lexer.skipIf({ $0.kind == .pipe }))
