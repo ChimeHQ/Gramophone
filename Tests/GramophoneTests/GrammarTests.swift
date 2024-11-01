@@ -1,8 +1,9 @@
-import XCTest
+import Testing
 import Gramophone
 
-final class GrammarTests: XCTestCase {
-	func testFirstsFromSingleTerminal() throws {
+struct GrammarTests {
+	@Test
+	func firstsFromSingleTerminal() throws {
 		let content = """
 a = '1';
 """
@@ -12,10 +13,11 @@ a = '1';
 			"a": ["1"],
 		]
 
-		XCTAssertEqual(grammar.computeFirstMap(), expected)
+		#expect(grammar.computeFirstMap() == expected)
 	}
 
-	func testFirstsFromReference() throws {
+	@Test
+	func firstsFromReference() throws {
 		let content = """
 a = '1';
 b = '2';
@@ -27,10 +29,11 @@ b = '2';
 			"b": ["2"],
 		]
 
-		XCTAssertEqual(grammar.computeFirstMap(), expected)
+		#expect(grammar.computeFirstMap() == expected)
 	}
 
-	func testFirstsFromDoubleReference() throws {
+	@Test
+	func firstsFromDoubleReference() throws {
 		let content = """
 a = '1';
 b = c;
@@ -44,12 +47,13 @@ c = a;
 			"c": ["1"],
 		]
 
-		XCTAssertEqual(grammar.computeFirstMap(), expected)
+		#expect(grammar.computeFirstMap() == expected)
 	}
 }
 
 extension GrammarTests {
-	func testFollowFromSingleTerminal() throws {
+	@Test
+	func followFromSingleTerminal() throws {
 		let content = """
 a = '1';
 """
@@ -58,10 +62,11 @@ a = '1';
 			"a": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowFromConcatenation() throws {
+	@Test
+	func followFromConcatenation() throws {
 		let content = """
 a = '1';
 b = '2';
@@ -75,10 +80,11 @@ c = a b;
 			"c": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowFromAlternation() throws {
+	@Test
+	func followFromAlternation() throws {
 		let content = """
 a = '1';
 b = a, ('2' | '3');
@@ -90,10 +96,11 @@ b = a, ('2' | '3');
 			"b": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowFromRepetition() throws {
+	@Test
+	func followFromRepetition() throws {
 		let content = """
 a = '1';
 b = a, {'2'};
@@ -105,10 +112,11 @@ b = a, {'2'};
 			"b": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowFromAlternationInStart() throws {
+	@Test
+	func followFromAlternationInStart() throws {
 		let content = """
 a = '1';
 b = a | (a '2');
@@ -120,10 +128,11 @@ b = a | (a '2');
 			"b": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowFromGroupedConcatenation() throws {
+	@Test
+	func followFromGroupedConcatenation() throws {
 		let content = """
 a = '1';
 b = (a ',' '2');
@@ -135,10 +144,11 @@ b = (a ',' '2');
 			"b": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowsFromReference() throws {
+	@Test
+	func followsFromReference() throws {
 		let content = """
 a = '1';
 b = a;
@@ -152,10 +162,11 @@ c = b, '3';
 			"c": [.endOfInput],
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 
-	func testFollowsFromSecondReference() throws {
+	@Test
+	func followsFromSecondReference() throws {
 		let content = """
 a = '1';
 b = a;
@@ -171,6 +182,6 @@ d = c, '3';
 			"d": [.endOfInput]
 		]
 
-		XCTAssertEqual(grammar.computeFollowMap(), expected)
+		#expect(grammar.computeFollowMap() == expected)
 	}
 }
