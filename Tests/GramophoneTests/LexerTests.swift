@@ -4,9 +4,9 @@ import Testing
 
 struct LexerTests {
 	@Test
-    func punctuation() throws {
-        let string = "=[],|;.→{}()?*'\"+:-`´"
-        var lexer = BNFLexer(string: string)
+	func punctuation() throws {
+		let string = "=[],|;.→{}()?*'\"+:-`´"
+		var lexer = BNFLexer(string: string)
 
 		#expect(lexer.next() == BNFToken(kind: .assignment, range: NSRange(0..<1), in: string))
 		#expect(lexer.next() == BNFToken(kind: .openBracket, range: NSRange(1..<2), in: string))
@@ -29,12 +29,12 @@ struct LexerTests {
 		#expect(lexer.next() == BNFToken(kind: .minus, range: NSRange(18..<19), in: string))
 		#expect(lexer.next() == BNFToken(kind: .quote, range: NSRange(19..<20), in: string))
 		#expect(lexer.next() == BNFToken(kind: .quote, range: NSRange(20..<21), in: string))
-    }
+	}
 
 	@Test
-    func name() throws {
-        let string = "word CapsInWord under_score a b 123 a111"
-        var lexer = BNFLexer(string: string)
+	func name() throws {
+		let string = "word CapsInWord under_score a b 123 a111"
+		var lexer = BNFLexer(string: string)
 
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(0..<4), in: string))
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(5..<15), in: string))
@@ -43,5 +43,5 @@ struct LexerTests {
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(30..<31), in: string))
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(32..<35), in: string))
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(36..<40), in: string))
-    }
+	}
 }
