@@ -245,8 +245,6 @@ extension ParserTests {
 	}
 
 	func testConcatentionWithGrouping() throws {
-		throw XCTSkip()
-		
 		let string = "a = b (c);"
 		let parser = BNFParser()
 
