@@ -306,13 +306,4 @@ extension ParserTests {
 		)
 		#expect(rules == [expectedRule])
 	}
-
-	@Test
-	func stuff() throws {
-		let string = """
-letter = "A" | "B";
-"""
-
-		_ = try BNFParser().parse(string).get()
-	}
 }
