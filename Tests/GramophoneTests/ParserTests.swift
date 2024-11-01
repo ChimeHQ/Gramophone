@@ -1,127 +1,115 @@
-import XCTest
-@testable import Gramophone
+import Testing
+import Gramophone
 
-final class ParserTests: XCTestCase {
-	func testAssignment() throws {
+struct ParserTests {
+	@Test
+	func assignment() throws {
 		let string = "test = 'a';"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .terminalString("a"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: "a")])
 	}
 
-	func testBNFStyleAssignment() throws {
+	@Test
+	func BNFStyleAssignment() throws {
 		let string = "test ::= abc;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .reference("abc"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: .reference("abc"))])
 	}
 
-	func testBackslashTerminal() throws {
+	@Test
+	func backslashTerminal() throws {
 		let string = "test = '\\';"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .terminalString("\\"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: "\\")])
 	}
 
-	func testReference() throws {
+	@Test
+	func reference() throws {
 		let string = "test = something;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .reference("something"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: .reference("something"))])
 	}
 
-	func testBNFStyleReference() throws {
-		throw XCTSkip()
-		
+	@Test(.disabled())
+	func BNFStyleReference() throws {
 		let string = "test = <something>;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .reference("<something>"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: .reference("<something>"))])
 	}
 
-    func testAlternation() throws {
-        let string = "test = 'a' | 'b';"
-        let parser = BNFParser()
+	@Test
+	func alternation() throws {
+		let string = "test = 'a' | 'b';"
+		let parser = BNFParser()
 
-        let rules = try parser.parse(string).get()
+		let rules = try parser.parse(string).get()
 
-        XCTAssertEqual(rules.count, 1)
+		let expectedRule = Rule(
+			"test",
+			kind: .alternation("a", "b")
+		)
+		#expect(rules == [expectedRule])
+	}
 
-        let expectedRule = Rule(name: "test",
-                                kind: .alternation(.terminalString("a"), .terminalString("b")))
-        XCTAssertEqual(rules[0], expectedRule)
-    }
+	@Test
+	func concatenation() throws {
+		let string = "test = 'a' , 'b';"
+		let parser = BNFParser()
 
-    func testConcatenation() throws {
-        let string = "test = 'a' , 'b';"
-        let parser = BNFParser()
+		let rules = try parser.parse(string).get()
 
-        let rules = try parser.parse(string).get()
+		let expectedRule = Rule(
+			name: "test",
+			kind: .concatenation("a", "b")
+		)
+		#expect(rules == [expectedRule])
+	}
 
-        XCTAssertEqual(rules.count, 1)
-
-        let expectedRule = Rule(name: "test",
-                                kind: .concatenation(.terminalString("a"), .terminalString("b")))
-        XCTAssertEqual(rules[0], expectedRule)
-    }
-
-	func testImplicitConcatenation() throws {
+	@Test
+	func implicitConcatenation() throws {
 		let string = "test = 'a' 'b';"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .concatenation(.terminalString("a"), .terminalString("b")))
-		XCTAssertEqual(rules[0], expectedRule)
+		let expectedRule = Rule(
+			name: "test",
+			kind: .concatenation("a", "b")
+		)
+		#expect(rules == [expectedRule])
 	}
 
-	func testOptional() throws {
+	@Test
+	func optional() throws {
 		let string = "test = ['-'], 'a';"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .concatenation(.optional(.terminalString("-")), .terminalString("a")))
-		XCTAssertEqual(rules[0], expectedRule)
+		let expectedRule = Rule(
+			name: "test",
+			kind: .concatenation(.optional("-"), "a")
+		)
+		#expect(rules == [expectedRule])
 	}
 
-	func testTailingOptional() throws {
+	@Test
+	func tailingOptional() throws {
 		let string = "a = b?;"
 		let parser = BNFParser()
 
@@ -131,107 +119,102 @@ final class ParserTests: XCTestCase {
 			Rule(name: "a", kind: .optional(.reference("b"))),
 		]
 
-		XCTAssertEqual(rules, expectedRules)
+		#expect(rules == expectedRules)
 	}
 
-	func testRepetition() throws {
+	@Test
+	func repetition() throws {
 		let string = "test = {'a'};"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .repetition(.terminalString("a")))
-		XCTAssertEqual(rules[0], expectedRule)
+		let expectedRule = Rule(
+			name: "test",
+			kind: .repetition("a")
+		)
+		#expect(rules == [expectedRule])
 	}
 
-	func testGrouping() throws {
+	@Test
+	func grouping() throws {
 		let string = "test = ('a');"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .grouping(.terminalString("a")))
-		XCTAssertEqual(rules[0], expectedRule)
+		let expectedRule = Rule(
+			name: "test",
+			kind: .grouping("a")
+		)
+		#expect(rules == [expectedRule])
 	}
 
-	func testException() throws {
+	@Test
+	func exception() throws {
 		let string = "test = a - b;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .exception(.reference("a"), .reference("b")))
-		XCTAssertEqual(rules[0], expectedRule)
-
+		let expectedRule = Rule(
+			name: "test",
+			kind: .exception(.reference("a"), .reference("b"))
+		)
+		#expect(rules == [expectedRule])
 	}
 }
 
 extension ParserTests {
-	func testAssignmentWithArrow() throws {
+	@Test
+	func assignmentWithArrow() throws {
 		let string = "test → 'a';"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .terminalString("a"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: "a")])
 	}
 
-	func testEmptyCodePoint() throws {
+	@Test
+	func emptyCodePoint() throws {
 		let string = "test = U+0000;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .terminalString("\u{0000}"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: "\u{0000}")])
 	}
 
-	func testFiveDigitCodePoint() throws {
+	@Test
+	func fiveDigitCodePoint() throws {
 		let string = "test = U+1F34E;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .terminalString("🍎"))
-		XCTAssertEqual(rules[0], expectedRule)
+		#expect(rules == [Rule("test", kind: "🍎")])
 	}
 }
 
 extension ParserTests {
-	func testMultipleRules() throws {
+	@Test
+	func multipleRules() throws {
 		let string = "a = 'a';b = 'b';"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
 		let expectedRules = [
-			Rule(name: "a", kind: .terminalString("a")),
-			Rule(name: "b", kind: .terminalString("b")),
+			Rule(name: "a", kind: "a"),
+			Rule(name: "b", kind: "b"),
 		]
-		
-		XCTAssertEqual(rules, expectedRules)
+
+		#expect(rules == expectedRules)
 	}
 
-	func testConcatentionWithinRepetition() throws {
+	@Test
+	func concatentionWithinRepetition() throws {
 		let string = "a = {a, b};"
 		let parser = BNFParser()
 
@@ -241,10 +224,11 @@ extension ParserTests {
 			Rule(name: "a", kind: .repetition(.concatenation(.reference("a"), .reference("b"))))
 		]
 
-		XCTAssertEqual(rules, expectedRules)
+		#expect(rules == expectedRules)
 	}
 
-	func testConcatentionWithGrouping() throws {
+	@Test
+	func concatentionWithGrouping() throws {
 		let string = "a = b (c);"
 		let parser = BNFParser()
 
@@ -254,10 +238,11 @@ extension ParserTests {
 			Rule(name: "a", kind: .concatenation(.reference("b"), .grouping(.reference("c")))),
 		]
 
-		XCTAssertEqual(rules, expectedRules)
+		#expect(rules == expectedRules)
 	}
 
-	func testConcatenationWithRepetition() throws {
+	@Test
+	func concatenationWithRepetition() throws {
 		let string = "a = b {c};"
 		let parser = BNFParser()
 
@@ -267,37 +252,36 @@ extension ParserTests {
 			Rule(name: "a", kind: .concatenation(.reference("b"), .repetition(.reference("c")))),
 		]
 
-		XCTAssertEqual(rules, expectedRules)
-
+		#expect(rules == expectedRules)
 	}
 }
 
 extension ParserTests {
-	func testConcatenationAlternationPrecedence() throws {
+	@Test
+	func concatenationAlternationPrecedence() throws {
 		let string = "test = a b | c;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .alternation(.concatenation(.reference("a"), .reference("b")), .reference("c")))
-		XCTAssertEqual(rules[0], expectedRule)
+		let expectedRule = Rule(
+			name: "test",
+			kind: .alternation(.concatenation(.reference("a"), .reference("b")), .reference("c"))
+		)
+		#expect(rules == [expectedRule])
 	}
 
-	func testAlternationConcatenationPrecedence() throws {
-		throw XCTSkip()
-		
+	@Test(.disabled())
+	func alternationConcatenationPrecedence() throws {
 		let string = "test = a | b c;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		XCTAssertEqual(rules.count, 1)
-
-		let expectedRule = Rule(name: "test",
-								kind: .alternation(.reference("a"), .concatenation(.reference("b"), .reference("c"))))
-		XCTAssertEqual(rules[0], expectedRule)
+		let expectedRule = Rule(
+			name: "test",
+			kind: .alternation(.reference("a"), .concatenation(.reference("b"), .reference("c")))
+		)
+		#expect(rules == [expectedRule])
 	}
 }

@@ -24,6 +24,11 @@ public struct Rule {
 		self.name = name
 		self.kind = kind
 	}
+
+	public init(_ name: String, kind: Kind) {
+		self.name = name
+		self.kind = kind
+	}
 }
 
 extension Rule.Kind: Sendable, Hashable {
@@ -60,6 +65,12 @@ extension Rule.Kind: CustomStringConvertible {
 extension Rule: CustomStringConvertible {
 	public var description: String {
 		"\(name) = \(kind);"
+	}
+}
+
+extension Rule.Kind : ExpressibleByStringLiteral {
+	public init(stringLiteral value: String) {
+		self = .terminalString(value)
 	}
 }
 
