@@ -71,7 +71,7 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             let endingToken = lexer.nextUntil(notIn: nameComponents)
 
             return BNFToken(kind: .name, start: token, end: endingToken)
-        case .singleQuote:
+        case .singleQuote, .backtick:
             return BNFToken(kind: .quote, range: token.range)
         case .doubleQuote:
             return BNFToken(kind: .doubleQuote, range: token.range)
@@ -111,6 +111,10 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             if string[token.range] == "→" {
                 return BNFToken(kind: .assignment, range: token.range)
             }
+
+			if string[token.range] == "´" {
+				return BNFToken(kind: .quote, range: token.range)
+			}
 
             return nil
         default:

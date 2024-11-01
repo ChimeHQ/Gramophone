@@ -31,6 +31,7 @@ dependencies: [
 
 ```
 single_quote_terminal = 'value';
+angled_quote_terminal = `value´;
 double_quote_terminal = "value";
 unicode_scalar = U+0000;
 

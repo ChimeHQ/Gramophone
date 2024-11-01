@@ -3,7 +3,7 @@ import XCTest
 
 final class LexerTests: XCTestCase {
     func testPunctuation() throws {
-        let string = "=[],|;.→{}()?*'\"+:-"
+        let string = "=[],|;.→{}()?*'\"+:-`´"
         var lexer = BNFLexer(string: string)
 
         XCTAssertEqual(lexer.next(), BNFToken(kind: .assignment, range: NSRange(0..<1), in: string))
@@ -25,6 +25,8 @@ final class LexerTests: XCTestCase {
         XCTAssertEqual(lexer.next(), BNFToken(kind: .plus, range: NSRange(16..<17), in: string))
 		XCTAssertEqual(lexer.next(), BNFToken(kind: .colon, range: NSRange(17..<18), in: string))
 		XCTAssertEqual(lexer.next(), BNFToken(kind: .minus, range: NSRange(18..<19), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .quote, range: NSRange(19..<20), in: string))
+		XCTAssertEqual(lexer.next(), BNFToken(kind: .quote, range: NSRange(20..<21), in: string))
     }
 
     func testName() throws {
