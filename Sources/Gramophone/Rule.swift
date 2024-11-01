@@ -39,25 +39,35 @@ extension Rule: Sendable, Hashable {
 
 extension Rule.Kind: CustomStringConvertible {
 	public var description: String {
+		recursivePrint(topLevel: true)
+	}
+
+	private func recursivePrint(topLevel: Bool = false) -> String {
 		switch self {
 		case let .concatenation(a, b):
-			return "\(a), \(b)"
+			let value = "\(a.recursivePrint()), \(b.recursivePrint())"
+
+			return topLevel ? value : "(\(value))"
 		case let .alternation(a, b):
-			return "\(a) | \(b)"
+			let value = "\(a.recursivePrint()) | \(b.recursivePrint())"
+
+			return topLevel ? value : "(\(value))"
 		case let .optional(value):
-			return "[\(value)]"
+			return "[\(value.recursivePrint())]"
 		case let .terminalString(value):
 			return "'\(value)'"
 		case let .reference(value):
 			return value
 		case let .exception(a, b):
-			return "\(a) - \(b)"
+			let value = "\(a.recursivePrint()) - \(b.recursivePrint())"
+
+			return topLevel ? value : "(\(value))"
 		case let .repetition(value):
-			return "{\(value)}"
+			return "{\(value.recursivePrint())}"
 		case let .grouping(value):
-			return "(\(value))"
+			return "(\(value.recursivePrint()))"
 		default:
-			return ""
+			return "<unknown>"
 		}
 	}
 }
