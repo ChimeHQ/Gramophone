@@ -78,6 +78,20 @@ public final class BNFParser {
 		return Rule.Kind.terminalString(String(scalar))
     }
 
+	private func parseBNFReference(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		guard let _ = lexer.nextIf({ $0.kind == .lessThan }) else {
+			throw BNFParserError.unexpectedToken
+		}
+
+		let name = try lexer.nextName()
+
+		guard let _ = lexer.nextIf({ $0.kind == .greaterThan }) else {
+			throw BNFParserError.unexpectedToken
+		}
+
+		return Rule.Kind.reference(name)
+	}
+
     private func parseSingleQuoteTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {
         guard let start = lexer.nextIf({ $0.kind == .quote }) else {
             throw BNFParserError.unexpectedToken
@@ -178,6 +192,8 @@ public final class BNFParser {
 			return try parseOptional(lexer)
         case .name:
             return try parseReferenceOrUnicodeScalar(lexer)
+		case .lessThan:
+			return try parseBNFReference(lexer)
 		case .openBrace:
 			return try parseRepetition(lexer)
 		case .openParen:

@@ -42,14 +42,14 @@ struct ParserTests {
 		#expect(rules == [Rule("test", kind: .reference("something"))])
 	}
 
-	@Test(.disabled())
+	@Test
 	func BNFStyleReference() throws {
 		let string = "test = <something>;"
 		let parser = BNFParser()
 
 		let rules = try parser.parse(string).get()
 
-		#expect(rules == [Rule("test", kind: .reference("<something>"))])
+		#expect(rules == [Rule("test", kind: .reference("something"))])
 	}
 
 	@Test

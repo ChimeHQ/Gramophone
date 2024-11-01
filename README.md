@@ -34,6 +34,7 @@ single_quote_terminal = 'value';
 angled_quote_terminal = `value´;
 double_quote_terminal = "value";
 unicode_scalar = U+0000;
+bnf_nonterminal = <value>;
 
 concatenation = a, b, c;
 implicit_concatenation = a b c;

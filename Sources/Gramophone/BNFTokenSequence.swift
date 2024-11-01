@@ -20,6 +20,8 @@ public enum BNFTokenKind {
     case pipe
     case star
     case plus
+	case lessThan
+	case greaterThan
 
     case assignment
 }
@@ -107,6 +109,10 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 			return BNFToken(kind: .colon, range: token.range)
 		case .dash:
 			return BNFToken(kind: .minus, range: token.range)
+		case .lessThan:
+			return BNFToken(kind: .lessThan, range: token.range)
+		case .greaterThan:
+			return BNFToken(kind: .greaterThan, range: token.range)
         case .otherCharacter:
             if string[token.range] == "→" {
                 return BNFToken(kind: .assignment, range: token.range)

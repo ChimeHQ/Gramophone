@@ -5,7 +5,7 @@ import Testing
 struct LexerTests {
 	@Test
 	func punctuation() throws {
-		let string = "=[],|;.→{}()?*'\"+:-`´"
+		let string = "=[],|;.→{}()?*'\"+:-`´<>"
 		var lexer = BNFLexer(string: string)
 
 		#expect(lexer.next() == BNFToken(kind: .assignment, range: NSRange(0..<1), in: string))
@@ -29,6 +29,8 @@ struct LexerTests {
 		#expect(lexer.next() == BNFToken(kind: .minus, range: NSRange(18..<19), in: string))
 		#expect(lexer.next() == BNFToken(kind: .quote, range: NSRange(19..<20), in: string))
 		#expect(lexer.next() == BNFToken(kind: .quote, range: NSRange(20..<21), in: string))
+		#expect(lexer.next() == BNFToken(kind: .lessThan, range: NSRange(21..<22), in: string))
+		#expect(lexer.next() == BNFToken(kind: .greaterThan, range: NSRange(22..<23), in: string))
 	}
 
 	@Test
