@@ -61,7 +61,21 @@ struct ParserTests {
 
 		let expectedRule = Rule(
 			"test",
-			kind: .alternation("a", "b")
+			kind: .alternation(["a", "b"])
+		)
+		#expect(rules == [expectedRule])
+	}
+
+	@Test
+	func alternationWithThreeElements() throws {
+		let string = "test = 'a' | 'b' | 'c';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRule = Rule(
+			"test",
+			kind: .alternation(["a", "b", "c"])
 		)
 		#expect(rules == [expectedRule])
 	}
@@ -288,7 +302,7 @@ extension ParserTests {
 
 		let expectedRule = Rule(
 			name: "test",
-			kind: .alternation(.concatenation(.reference("a"), .reference("b")), .reference("c"))
+			kind: .alternation([.concatenation(.reference("a"), .reference("b")), .reference("c")])
 		)
 		#expect(rules == [expectedRule])
 	}
@@ -302,7 +316,7 @@ extension ParserTests {
 
 		let expectedRule = Rule(
 			name: "test",
-			kind: .alternation(.reference("a"), .concatenation(.reference("b"), .reference("c")))
+			kind: .alternation([.reference("a"), .concatenation(.reference("b"), .reference("c"))])
 		)
 		#expect(rules == [expectedRule])
 	}

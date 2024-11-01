@@ -3,7 +3,7 @@ import Foundation
 public struct Rule {
 	public indirect enum Kind {
         case concatenation(Kind, Kind)
-        case alternation(Kind, Kind)
+        case alternation([Kind])
         case optional(Kind)
         case repetition(Kind)
         case grouping(Kind)
@@ -48,8 +48,8 @@ extension Rule.Kind: CustomStringConvertible {
 			let value = "\(a.recursivePrint()), \(b.recursivePrint())"
 
 			return topLevel ? value : "(\(value))"
-		case let .alternation(a, b):
-			let value = "\(a.recursivePrint()) | \(b.recursivePrint())"
+		case let .alternation(elements):
+			let value = elements.map { $0.recursivePrint() }.joined(separator: " | ")
 
 			return topLevel ? value : "(\(value))"
 		case let .optional(value):
@@ -89,9 +89,10 @@ extension Rule.Kind {
 		block(self)
 
 		switch self {
-		case let .alternation(a, b):
-			a.traverse(block)
-			b.traverse(block)
+		case let .alternation(elements):
+			for element in elements {
+				element.traverse(block)
+			}
 		case let .concatenation(a, b):
 			a.traverse(block)
 			b.traverse(block)
@@ -113,8 +114,14 @@ extension Rule.Kind {
 extension Rule.Kind {
 	var trailingKinds: Set<Rule.Kind> {
 		switch self {
-		case let .alternation(a, b):
-			return a.trailingKinds.union(b.trailingKinds)
+		case let .alternation(elements):
+			var set = Set<Rule.Kind>()
+
+			for element in elements {
+				set.formUnion(element.trailingKinds)
+			}
+
+			return set
 		case let .concatenation(_, b):
 			return b.trailingKinds
 		case let .repetition(a):
@@ -130,8 +137,14 @@ extension Rule.Kind {
 
 	var leadingKinds: Set<Rule.Kind> {
 		switch self {
-		case let .alternation(a, b):
-			return a.leadingKinds.union(b.leadingKinds)
+		case let .alternation(elements):
+			var set = Set<Rule.Kind>()
+
+			for element in elements {
+				set.formUnion(element.leadingKinds)
+			}
+
+			return set
 		case let .concatenation(a, _):
 			return a.leadingKinds
 		case let .repetition(a):
@@ -178,8 +191,14 @@ extension Rule.Kind {
 
 	var alternativeNames: Set<String> {
 		switch self {
-		case let .alternation(a, b):
-			return a.alternativeNames.union(b.alternativeNames)
+		case let .alternation(elements):
+			var set = Set<String>()
+
+			for element in elements {
+				set.formUnion(element.alternativeNames)
+			}
+
+			return set
 		case let .reference(name):
 			return [name]
 		case let .grouping(a):

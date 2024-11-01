@@ -43,11 +43,14 @@ extension Grammar {
 			return [.string(value)]
 		case let .concatenation(a, _):
 			return computeFirsts(of: a, map: &map)
-		case let .alternation(a, b):
-			let aFirsts = computeFirsts(of: a, map: &map)
-			let bFirsts = computeFirsts(of: b, map: &map)
+		case let .alternation(elements):
+			var set = Set<Terminal>()
 
-			return aFirsts.union(bFirsts)
+			for element in elements {
+				set.formUnion(computeFirsts(of: element, map: &map))
+			}
+
+			return set
 		case let .grouping(a):
 			return computeFirsts(of: a, map: &map)
 		case .reference("all"):

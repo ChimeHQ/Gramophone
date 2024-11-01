@@ -123,9 +123,21 @@ public final class BNFParser {
     private func parseAlternation(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
         precondition(lexer.skipIf({ $0.kind == .pipe }))
 
-        let right = try parsePrimaryExpression(lexer)
+		var expressions = [leftNode]
 
-        return .alternation(leftNode, right)
+		while true {
+			let exp = try parsePrimaryExpression(lexer)
+
+			expressions.append(exp)
+
+			if lexer.skipIf({ $0.kind == .pipe }) {
+				continue
+			} else {
+				break
+			}
+		}
+
+        return .alternation(expressions)
     }
 
     private func parseConcatenation(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
@@ -207,24 +219,24 @@ public final class BNFParser {
         }
     }
 
-    private func parseRuleExpression(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind? {
-        switch lexer.peek()?.kind {
+	private func parseRuleExpression(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind? {
+		switch lexer.peek()?.kind {
 		case .question:
 			_ = lexer.next()
-			
+
 			return .optional(leftNode)
-        case .pipe:
-            return try parseAlternation(lexer, leftNode: leftNode)
+		case .pipe:
+			return try parseAlternation(lexer, leftNode: leftNode)
 		case .comma, .name, .quote, .doubleQuote, .openBrace, .openParen:
-            return try parseConcatenation(lexer, leftNode: leftNode)
+			return try parseConcatenation(lexer, leftNode: leftNode)
 		case .minus:
 			return try parseException(lexer, leftNode: leftNode)
 		case .closeBrace, .closeParen, .closeBracket:
 			return nil
-        default:
-            throw BNFParserError.unexpectedToken
-        }
-    }
+		default:
+			throw BNFParserError.unexpectedToken
+		}
+	}
 
 	private func parseExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
 		let start = try parsePrimaryExpression(lexer)
