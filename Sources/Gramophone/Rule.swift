@@ -2,7 +2,7 @@ import Foundation
 
 public struct Rule {
 	public indirect enum Kind {
-        case concatenation(Kind, Kind)
+        case concatenation([Kind])
         case alternation([Kind])
         case optional(Kind)
         case repetition(Kind)
@@ -44,8 +44,8 @@ extension Rule.Kind: CustomStringConvertible {
 
 	private func recursivePrint(topLevel: Bool = false) -> String {
 		switch self {
-		case let .concatenation(a, b):
-			let value = "\(a.recursivePrint()), \(b.recursivePrint())"
+		case let .concatenation(elements):
+			let value = elements.map { $0.recursivePrint() }.joined(separator: ", ")
 
 			return topLevel ? value : "(\(value))"
 		case let .alternation(elements):
@@ -93,9 +93,10 @@ extension Rule.Kind {
 			for element in elements {
 				element.traverse(block)
 			}
-		case let .concatenation(a, b):
-			a.traverse(block)
-			b.traverse(block)
+		case let .concatenation(elements):
+			for element in elements {
+				element.traverse(block)
+			}
 		case let .grouping(a):
 			a.traverse(block)
 		case let .exception(a, b):
@@ -122,8 +123,8 @@ extension Rule.Kind {
 			}
 
 			return set
-		case let .concatenation(_, b):
-			return b.trailingKinds
+		case let .concatenation(elements):
+			return elements.last!.trailingKinds
 		case let .repetition(a):
 			return a.trailingKinds
 		case let .grouping(a):
@@ -145,8 +146,8 @@ extension Rule.Kind {
 			}
 
 			return set
-		case let .concatenation(a, _):
-			return a.leadingKinds
+		case let .concatenation(elements):
+			return elements.first!.leadingKinds
 		case let .repetition(a):
 			return a.leadingKinds
 		case let .grouping(a):
@@ -163,10 +164,15 @@ extension Rule.Kind {
 
 		traverse { value in
 			switch value {
-			case let .concatenation(a, b):
-				for trailing in a.trailingKinds {
-					if case let .reference(name) = trailing {
-						map[name, default: Set()].formUnion(b.leadingKinds)
+			case let .concatenation(elements):
+				// this is a tricky calculation
+				let pairs = zip(elements, elements.dropFirst())
+
+				for (current, next) in pairs {
+					for trailing in current.trailingKinds {
+						if case let .reference(name) = trailing {
+							map[name, default: Set()].formUnion(next.leadingKinds)
+						}
 					}
 				}
 			default:

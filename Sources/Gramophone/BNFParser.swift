@@ -143,9 +143,27 @@ public final class BNFParser {
     private func parseConcatenation(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {
         _ = lexer.skipIf({ $0.kind == .comma })
 
-        let right = try parsePrimaryExpression(lexer)
+		var expressions = [leftNode]
 
-        return .concatenation(leftNode, right)
+		while true {
+			let exp = try parsePrimaryExpression(lexer)
+
+			expressions.append(exp)
+
+			switch lexer.peek()?.kind {
+			case .comma:
+				_ = lexer.next()
+				continue
+			case .quote, .doubleQuote, .openBracket, .name, .openBrace, .lessThan, .openParen:
+				continue
+			default:
+				break
+			}
+
+			break
+		}
+
+        return .concatenation(expressions)
     }
 
 	private func parseException(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind {

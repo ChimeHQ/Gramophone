@@ -41,8 +41,8 @@ extension Grammar {
 		switch kind {
 		case let .terminalString(value):
 			return [.string(value)]
-		case let .concatenation(a, _):
-			return computeFirsts(of: a, map: &map)
+		case let .concatenation(elements):
+			return computeFirsts(of: elements.first!, map: &map)
 		case let .alternation(elements):
 			var set = Set<Terminal>()
 
