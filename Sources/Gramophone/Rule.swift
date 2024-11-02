@@ -39,21 +39,21 @@ extension Rule: Sendable, Hashable {
 
 extension Rule.Kind: CustomStringConvertible {
 	public var description: String {
-		recursivePrint(topLevel: true)
+		recursivePrint(grouped: true)
 	}
 
-	private func recursivePrint(topLevel: Bool = false) -> String {
+	private func recursivePrint(grouped: Bool = false) -> String {
 		switch self {
 		case let .concatenation(elements):
 			let value = elements.map { $0.recursivePrint() }.joined(separator: ", ")
 
-			return topLevel ? value : "(\(value))"
+			return grouped ? value : "(\(value))"
 		case let .alternation(elements):
 			let value = elements.map { $0.recursivePrint() }.joined(separator: " | ")
 
-			return topLevel ? value : "(\(value))"
+			return grouped ? value : "(\(value))"
 		case let .optional(value):
-			return "[\(value.recursivePrint())]"
+			return "[\(value.recursivePrint(grouped: true))]"
 		case let .terminalString(value):
 			return "'\(value)'"
 		case let .reference(value):
@@ -61,15 +61,15 @@ extension Rule.Kind: CustomStringConvertible {
 		case let .exception(a, b):
 			let value = "\(a.recursivePrint()) - \(b.recursivePrint())"
 
-			return topLevel ? value : "(\(value))"
+			return grouped ? value : "(\(value))"
 		case let .repetition(value, allowsNone):
 			if allowsNone {
-				return "{\(value.recursivePrint())}"
+				return "{\(value.recursivePrint(grouped: true))}"
 			} else {
-				return "(\(value.recursivePrint())) +"
+				return "(\(value.recursivePrint(grouped: true))) +"
 			}
 		case let .grouping(value):
-			return "(\(value.recursivePrint()))"
+			return "(\(value.recursivePrint(grouped: true)))"
 		default:
 			return "<unknown>"
 		}

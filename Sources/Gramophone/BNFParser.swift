@@ -219,22 +219,35 @@ public final class BNFParser {
 	}
 
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
-        switch lexer.peek()?.kind {
+        let kind = switch lexer.peek()?.kind {
         case .quote, .doubleQuote:
-            return try parseTerminal(lexer)
+            try parseTerminal(lexer)
 		case .openBracket:
-			return try parseOptional(lexer)
+			try parseOptional(lexer)
         case .name:
-            return try parseReferenceOrUnicodeScalar(lexer)
+            try parseReferenceOrUnicodeScalar(lexer)
 		case .lessThan:
-			return try parseBNFReference(lexer)
+			try parseBNFReference(lexer)
 		case .openBrace:
-			return try parseRepetition(lexer)
+			try parseRepetition(lexer)
 		case .openParen:
-			return try parseGrouping(lexer)
+			try parseGrouping(lexer)
         default:
             throw BNFParserError.unexpectedToken
         }
+
+		switch lexer.peek()?.kind {
+		case .star:
+			_ = lexer.next()
+
+			return .repetition(kind, none: true)
+		case .plus:
+			_ = lexer.next()
+
+			return .repetition(kind, none: false)
+		default:
+			return kind
+		}
     }
 
 	private func parseRuleExpression(_ lexer: BNFLexerReference, leftNode: Rule.Kind) throws -> Rule.Kind? {

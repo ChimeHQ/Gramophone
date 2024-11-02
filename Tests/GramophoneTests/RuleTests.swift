@@ -3,7 +3,7 @@ import Gramophone
 
 struct RuleTests {
     @Test
-	func ruleStringRendering() async throws {
+	func renderingNesting() async throws {
 		let ruleA = Rule(
 			"test",
 			kind: .alternation([.reference("a"), .concatenation([.reference("b"), .reference("c")])])
@@ -18,4 +18,14 @@ struct RuleTests {
 
 		#expect(ruleB.description == "test = (a | b), c;")
     }
+
+	@Test
+	func suppressingUnnecessaryGrouping() async throws {
+		let rule = Rule(
+			"test",
+			kind: .repetition(.concatenation(["a", "b"]), none: true)
+		)
+
+		#expect(rule.description == "test = {'a', 'b'};")
+	}
 }

@@ -42,6 +42,8 @@ alternation = a | b | c;
 optional = [a, b];
 tailing_optional = a?;
 repetition = {a};
+tailing_plus_repetition = a+;
+tailing_star_repetition = a+;
 grouping = (a, b, c);
 exception = a - b;
 

@@ -179,6 +179,34 @@ struct ParserTests {
 	}
 
 	@Test
+	func starRepetition() throws {
+		let string = "test = 'a'*;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRule = Rule(
+			name: "test",
+			kind: .repetition("a", none: true)
+		)
+		#expect(rules == [expectedRule])
+	}
+
+	@Test
+	func plusRepetition() throws {
+		let string = "test = 'a'+;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRule = Rule(
+			name: "test",
+			kind: .repetition("a", none: false)
+		)
+		#expect(rules == [expectedRule])
+	}
+
+	@Test
 	func grouping() throws {
 		let string = "test = ('a');"
 		let parser = BNFParser()
