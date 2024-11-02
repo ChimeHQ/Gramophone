@@ -173,7 +173,7 @@ struct ParserTests {
 
 		let expectedRule = Rule(
 			name: "test",
-			kind: .repetition("a")
+			kind: .repetition("a", none: true)
 		)
 		#expect(rules == [expectedRule])
 	}
@@ -285,7 +285,7 @@ extension ParserTests {
 		let rules = try parser.parse(string).get()
 
 		let expectedRules = [
-			Rule(name: "a", kind: .repetition(.concatenation([.reference("a"), .reference("b")])))
+			Rule(name: "a", kind: .repetition(.concatenation([.reference("a"), .reference("b")]), none: true))
 		]
 
 		#expect(rules == expectedRules)
@@ -313,7 +313,7 @@ extension ParserTests {
 		let rules = try parser.parse(string).get()
 
 		let expectedRules = [
-			Rule(name: "a", kind: .concatenation([.reference("b"), .repetition(.reference("c"))])),
+			Rule(name: "a", kind: .concatenation([.reference("b"), .repetition(.reference("c"), none:  true)])),
 		]
 
 		#expect(rules == expectedRules)

@@ -5,7 +5,7 @@ public struct Rule {
         case concatenation([Kind])
         case alternation([Kind])
         case optional(Kind)
-        case repetition(Kind)
+		case repetition(Kind, none: Bool)
         case grouping(Kind)
         case terminalString(String)
 		case oneOrMore
@@ -62,8 +62,12 @@ extension Rule.Kind: CustomStringConvertible {
 			let value = "\(a.recursivePrint()) - \(b.recursivePrint())"
 
 			return topLevel ? value : "(\(value))"
-		case let .repetition(value):
-			return "{\(value.recursivePrint())}"
+		case let .repetition(value, allowsNone):
+			if allowsNone {
+				return "{\(value.recursivePrint())}"
+			} else {
+				return "(\(value.recursivePrint())) +"
+			}
 		case let .grouping(value):
 			return "(\(value.recursivePrint()))"
 		default:
@@ -102,7 +106,7 @@ extension Rule.Kind {
 		case let .exception(a, b):
 			a.traverse(block)
 			b.traverse(block)
-		case let .repetition(a):
+		case let .repetition(a, _):
 			a.traverse(block)
 		case let .optional(a):
 			a.traverse(block)
@@ -125,7 +129,7 @@ extension Rule.Kind {
 			return set
 		case let .concatenation(elements):
 			return elements.last!.trailingKinds
-		case let .repetition(a):
+		case let .repetition(a, _):
 			return a.trailingKinds
 		case let .grouping(a):
 			return a.trailingKinds
@@ -148,7 +152,7 @@ extension Rule.Kind {
 			return set
 		case let .concatenation(elements):
 			return elements.first!.leadingKinds
-		case let .repetition(a):
+		case let .repetition(a, _):
 			return a.leadingKinds
 		case let .grouping(a):
 			return a.leadingKinds

@@ -201,7 +201,7 @@ public final class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		return .repetition(exp)
+		return .repetition(exp, none: true)
 	}
 
 	private func parseGrouping(_ lexer: BNFLexerReference) throws -> Rule.Kind {
