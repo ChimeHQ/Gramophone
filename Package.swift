@@ -7,10 +7,11 @@ let package = Package(
 	platforms: [.macOS(.v10_15), .iOS(.v13)],
     products: [
         .library(name: "Gramophone", targets: ["Gramophone"]),
-//		.executable(name: "gramophone", targets: ["CLITool"]),
+		.executable(name: "gram", targets: ["CLITool"]),
     ],
     dependencies: [
 		.package(url: "https://github.com/ChimeHQ/Flexer", branch: "main"),
+		.package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
     ],
     targets: [
         .target(
@@ -19,7 +20,13 @@ let package = Package(
         .testTarget(
             name: "GramophoneTests",
             dependencies: ["Gramophone"]),
-//		.executableTarget(name: "CLITool", dependencies: ["Gramophone"]),
+		.executableTarget(
+			name: "CLITool",
+			dependencies: [
+				"Gramophone",
+				.product(name: "ArgumentParser", package: "swift-argument-parser"),
+			]
+		),
     ]
 )
 

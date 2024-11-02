@@ -1,16 +1,23 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "Flexer",
-        "repositoryURL": "https://github.com/ChimeHQ/Flexer",
-        "state": {
-          "branch": "main",
-          "revision": "16eafa09e2137fdbb14dadc2296adfedd53f1593",
-          "version": null
-        }
+  "pins" : [
+    {
+      "identity" : "flexer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChimeHQ/Flexer",
+      "state" : {
+        "branch" : "main",
+        "revision" : "16eafa09e2137fdbb14dadc2296adfedd53f1593"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
+      }
+    }
+  ],
+  "version" : 2
 }

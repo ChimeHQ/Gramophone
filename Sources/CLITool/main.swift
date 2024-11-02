@@ -1,13 +1,34 @@
 import Foundation
+import ArgumentParser
+
 import Gramophone
 
-let fileURL = URL(fileURLWithPath: CommandLine.arguments[1])
-let string = try String(contentsOf: fileURL)
+struct GramophoneCommand: ParsableCommand {
+	static let configuration = CommandConfiguration(commandName: "gramophone")
 
-let parser = BNFParser()
+	@Flag(
+		name: .shortAndLong,
+		help: "Print the version and exit."
+	)
+	var version: Bool = false
 
-let rules = try parser.parse(string).get()
+	@Argument(help: "The path to the input file.")
+	var inputPath: String
 
-for rule in rules {
-	print(rule)
+	func run() throws {
+		if version {
+			throw CleanExit.message("0.1.0")
+		}
+
+		let input = try String(contentsOfFile: inputPath, encoding: .utf8)
+		let parser = BNFParser()
+
+		let grammar = try parser.parseGrammar(input)
+
+		for (_, rule) in grammar.rules {
+			print(rule)
+		}
+	}
 }
+
+GramophoneCommand.main()
