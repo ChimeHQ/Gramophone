@@ -187,7 +187,7 @@ public final class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		return .optional(rule)
+		return .occurrence(rule, frequency: .zeroOrOne)
 	}
 
 	private func parseRepetition(_ lexer: BNFLexerReference) throws -> Rule.Kind {
@@ -201,7 +201,7 @@ public final class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		return .repetition(exp, none: true)
+		return .occurrence(exp, frequency: .zeroOrMore)
 	}
 
 	private func parseGrouping(_ lexer: BNFLexerReference) throws -> Rule.Kind {
@@ -240,11 +240,11 @@ public final class BNFParser {
 		case .star:
 			_ = lexer.next()
 
-			return .repetition(kind, none: true)
+			return .occurrence(kind, frequency: .zeroOrMore)
 		case .plus:
 			_ = lexer.next()
 
-			return .repetition(kind, none: false)
+			return .occurrence(kind, frequency: .oneOrMore)
 		default:
 			return kind
 		}
@@ -255,7 +255,7 @@ public final class BNFParser {
 		case .question:
 			_ = lexer.next()
 
-			return .optional(leftNode)
+			return .occurrence(leftNode, frequency: .zeroOrOne)
 		case .pipe:
 			return try parseAlternation(lexer, leftNode: leftNode)
 		case .comma, .name, .quote, .doubleQuote, .openBrace, .openParen, .openBracket:

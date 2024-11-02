@@ -23,7 +23,7 @@ struct RuleTests {
 	func suppressingUnnecessaryGrouping() async throws {
 		let rule = Rule(
 			"test",
-			kind: .repetition(.concatenation(["a", "b"]), none: true)
+			kind: .occurrence(.concatenation(["a", "b"]), frequency: .zeroOrMore)
 		)
 
 		#expect(rule.description == "test = {'a', 'b'};")

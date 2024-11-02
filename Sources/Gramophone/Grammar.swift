@@ -74,7 +74,7 @@ extension Grammar {
 			let bFirsts = computeFirsts(of: b, map: &map)
 
 			return aFirsts.subtracting(bFirsts)
-		case let .repetition(a, _):
+		case let .occurrence(a, _):
 			return computeFirsts(of: a, map: &map)
 		default:
 			return []

@@ -1,20 +1,28 @@
 import Foundation
 
 public struct Rule {
+	public enum Frequency: Sendable, Hashable {
+		case zeroOrOne
+		case zeroOrMore
+		case oneOrMore
+	}
+
 	public indirect enum Kind {
         case concatenation([Kind])
         case alternation([Kind])
-        case optional(Kind)
-		case repetition(Kind, none: Bool)
+		case occurrence(Kind, frequency: Frequency)
         case grouping(Kind)
         case terminalString(String)
-		case oneOrMore
         case comment
         case specialSequence
         case exception(Kind, Kind)
         case reference(String)
 
 		public static let epsilon = terminalString("")
+
+		public static func optional(_ kind: Kind) -> Kind {
+			.occurrence(kind, frequency: .zeroOrOne)
+		}
     }
 
     public var name: String
@@ -52,8 +60,6 @@ extension Rule.Kind: CustomStringConvertible {
 			let value = elements.map { $0.recursivePrint() }.joined(separator: " | ")
 
 			return grouped ? value : "(\(value))"
-		case let .optional(value):
-			return "[\(value.recursivePrint(grouped: true))]"
 		case let .terminalString(value):
 			return "'\(value)'"
 		case let .reference(value):
@@ -62,10 +68,13 @@ extension Rule.Kind: CustomStringConvertible {
 			let value = "\(a.recursivePrint()) - \(b.recursivePrint())"
 
 			return grouped ? value : "(\(value))"
-		case let .repetition(value, allowsNone):
-			if allowsNone {
+		case let .occurrence(value, frequency):
+			switch frequency {
+			case .zeroOrOne:
+				return "[\(value.recursivePrint(grouped: true))]"
+			case .zeroOrMore:
 				return "{\(value.recursivePrint(grouped: true))}"
-			} else {
+			case .oneOrMore:
 				return "(\(value.recursivePrint(grouped: true))) +"
 			}
 		case let .grouping(value):
@@ -106,9 +115,7 @@ extension Rule.Kind {
 		case let .exception(a, b):
 			a.traverse(block)
 			b.traverse(block)
-		case let .repetition(a, _):
-			a.traverse(block)
-		case let .optional(a):
+		case let .occurrence(a, _):
 			a.traverse(block)
 		default:
 			break
@@ -129,11 +136,9 @@ extension Rule.Kind {
 			return set
 		case let .concatenation(elements):
 			return elements.last!.trailingKinds
-		case let .repetition(a, _):
+		case let .occurrence(a, _):
 			return a.trailingKinds
 		case let .grouping(a):
-			return a.trailingKinds
-		case let .optional(a):
 			return a.trailingKinds
 		default:
 			return [self]
@@ -152,11 +157,9 @@ extension Rule.Kind {
 			return set
 		case let .concatenation(elements):
 			return elements.first!.leadingKinds
-		case let .repetition(a, _):
+		case let .occurrence(a, _):
 			return a.leadingKinds
 		case let .grouping(a):
-			return a.leadingKinds
-		case let .optional(a):
 			return a.leadingKinds
 		default:
 			return [self]

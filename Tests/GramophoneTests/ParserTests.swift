@@ -187,7 +187,7 @@ struct ParserTests {
 
 		let expectedRule = Rule(
 			name: "test",
-			kind: .repetition("a", none: true)
+			kind: .occurrence("a", frequency: .zeroOrMore)
 		)
 		#expect(rules == [expectedRule])
 	}
@@ -201,7 +201,7 @@ struct ParserTests {
 
 		let expectedRule = Rule(
 			name: "test",
-			kind: .repetition("a", none: true)
+			kind: .occurrence("a", frequency: .zeroOrMore)
 		)
 		#expect(rules == [expectedRule])
 	}
@@ -215,7 +215,7 @@ struct ParserTests {
 
 		let expectedRule = Rule(
 			name: "test",
-			kind: .repetition("a", none: false)
+			kind: .occurrence("a", frequency: .oneOrMore)
 		)
 		#expect(rules == [expectedRule])
 	}
@@ -327,7 +327,7 @@ extension ParserTests {
 		let rules = try parser.parse(string).get()
 
 		let expectedRules = [
-			Rule(name: "a", kind: .repetition(.concatenation([.reference("a"), .reference("b")]), none: true))
+			Rule(name: "a", kind: .occurrence(.concatenation([.reference("a"), .reference("b")]), frequency: .zeroOrMore))
 		]
 
 		#expect(rules == expectedRules)
@@ -355,7 +355,7 @@ extension ParserTests {
 		let rules = try parser.parse(string).get()
 
 		let expectedRules = [
-			Rule(name: "a", kind: .concatenation([.reference("b"), .repetition(.reference("c"), none:  true)])),
+			Rule(name: "a", kind: .concatenation([.reference("b"), .occurrence(.reference("c"), frequency:  .zeroOrMore)])),
 		]
 
 		#expect(rules == expectedRules)
