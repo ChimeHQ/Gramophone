@@ -261,6 +261,16 @@ extension ParserTests {
 	}
 
 	@Test
+	func assignmentWithSymbols() throws {
+		let string = "test = '%';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: "%")])
+	}
+
+	@Test
 	func emptyCodePoint() throws {
 		let string = "test = U+0000;"
 		let parser = BNFParser()
@@ -301,6 +311,49 @@ test = 'a';
 
 		#expect(rules == [Rule("test", kind: "a")])
 	}
+
+	@Test
+	func angledQuoteTerminal() throws {
+		let string = "test = `a´"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: "a")])
+	}
+
+	@Test
+	func multipleAssignments() throws {
+		let string = """
+a = 'a';
+b = 'b';
+"""
+		let rules = try BNFParser().parse(string).get()
+
+		let expectedRules = [
+			Rule("a", kind: "a"),
+			Rule("b", kind: "b"),
+		]
+
+		#expect(rules == expectedRules)
+	}
+
+	@Test
+	func multipleNewLineSeparatedAssignments() throws {
+		let string = """
+a = 'a'
+
+b = 'b'
+"""
+		let rules = try BNFParser().parse(string).get()
+
+		let expectedRules = [
+			Rule("a", kind: "a"),
+			Rule("b", kind: "b"),
+		]
+
+		#expect(rules == expectedRules)
+	}
 }
 
 extension ParserTests {
@@ -320,7 +373,7 @@ extension ParserTests {
 	}
 
 	@Test
-	func concatentionWithinRepetition() throws {
+	func concatenationWithinRepetition() throws {
 		let string = "a = {a, b};"
 		let parser = BNFParser()
 
@@ -334,7 +387,7 @@ extension ParserTests {
 	}
 
 	@Test
-	func concatentionWithGrouping() throws {
+	func concatenationWithGrouping() throws {
 		let string = "a = b (c);"
 		let parser = BNFParser()
 

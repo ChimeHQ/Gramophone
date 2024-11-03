@@ -57,7 +57,13 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 	]
 
     public mutating func next() -> Element? {
-        _ = lexer.nextUntil(notIn: [.space, .tab, .newline])
+        _ = lexer.nextUntil(notIn: [.space, .tab])
+
+		if let start = lexer.nextIf({ $0.kind == .newline }), lexer.peek()?.kind == .newline {
+			let end = lexer.nextUntil(notIn: [.newline])
+
+			return BNFToken(kind: .semicolon, start: start, end: end)
+		}
 
         guard let token = lexer.next() else {
             return nil
@@ -121,8 +127,6 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 			if string[token.range] == "´" {
 				return BNFToken(kind: .quote, range: token.range)
 			}
-
-            return nil
         default:
             break
         }

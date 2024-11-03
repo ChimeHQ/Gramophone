@@ -274,8 +274,8 @@ public final class BNFParser {
 
 		var ending = start
 
-		while true {
-			if lexer.skipIf({ $0.kind == .semicolon }) {
+		while let token = lexer.peek() {
+			if token.kind == .semicolon {
 				break
 			}
 

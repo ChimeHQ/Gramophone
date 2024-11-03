@@ -46,4 +46,21 @@ struct LexerTests {
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(32..<35), in: string))
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(36..<40), in: string))
 	}
+
+	@Test
+	func newlineLetter() throws {
+		let string = "\nb"
+		var lexer = BNFLexer(string: string)
+
+		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(1..<2), in: string))
+	}
+
+	@Test
+	func consolidateNewLinesToSemicolon() throws {
+		let string = "\n\n \n\n\n"
+		var lexer = BNFLexer(string: string)
+
+		#expect(lexer.next() == BNFToken(kind: .semicolon, range: NSRange(0..<2), in: string))
+		#expect(lexer.next() == BNFToken(kind: .semicolon, range: NSRange(3..<6), in: string))
+	}
 }
