@@ -43,13 +43,15 @@ optional = [a, b];
 tailing_optional = a?;
 repetition = {a};
 tailing_plus_repetition = a+;
-tailing_star_repetition = a+;
+tailing_star_repetition = a*;
 grouping = (a, b, c);
 exception = a - b;
 
 arrow_assigment → a;
 colon_colon_equals_assigment ::= a;
 ```
+
+There's also a bunch of additional notation used by the W3C's [XQuery specification](https://www.w3.org/TR/xquery-31/#EBNFNotation), which may be work looking into.
 
 ## Usage
 
