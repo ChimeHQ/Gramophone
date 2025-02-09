@@ -31,11 +31,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Install keys
-        run: curl --silent --retry 3 --location --fail https://swift.org/keys/all-keys.asc | gpg --import -
-      - name: Install swiftly
-        run: curl -L https://swiftlang.github.io/swiftly/swiftly-install.sh | bash -s -- -y
-      - name: Install the latest Swift toolchain
-        run: swiftly install latest
+      - name: Swiftly
+        uses: vapor/swiftly-action@v0.1.4
+        with:
+          toolchain: latest
       - name: Test
         run: swift test
