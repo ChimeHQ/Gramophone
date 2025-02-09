@@ -93,18 +93,30 @@ public final class BNFParser {
 	}
 
 	private func parseQuotedTerminal(_ lexer: BNFLexerReference) throws -> Rule.Kind {
-		guard let expectedQuote = lexer.peek()?.kind else {
+		let terminator: BNFTokenKind
+
+		guard let start = lexer.peek() else {
 			throw BNFParserError.unexpectedToken
 		}
-
-		guard let start = lexer.nextIf({ $0.kind == expectedQuote }) else {
+		
+		switch start.kind {
+		case .quote:
+			terminator = .quote
+		case .doubleQuote:
+			terminator = .doubleQuote
+		case .backtick:
+			terminator = .tick
+		default:
 			throw BNFParserError.unexpectedToken
 		}
+		
+		_ = lexer.next()
 
-		guard let _ = lexer.nextUntil({ $0.kind == expectedQuote }) else {
+		guard let _ = lexer.nextUntil({ $0.kind == terminator }) else {
 			throw BNFParserError.missingCloseQuote
 		}
 
+		
 		guard let end = lexer.next() else {
 			throw BNFParserError.unexpectedToken
 		}
@@ -220,7 +232,7 @@ public final class BNFParser {
 
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
         let kind = switch lexer.peek()?.kind {
-        case .quote, .doubleQuote:
+		case .quote, .doubleQuote, .backtick:
             try parseTerminal(lexer)
 		case .openBracket:
 			try parseOptional(lexer)

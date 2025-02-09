@@ -22,8 +22,11 @@ public enum BNFTokenKind {
     case plus
 	case lessThan
 	case greaterThan
+	case backtick
+	case tick
 
     case assignment
+	case otherCharacter
 }
 
 typealias BNFToken = Flexer.Token<BNFTokenKind>
@@ -79,10 +82,12 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             let endingToken = lexer.nextUntil(notIn: nameComponents)
 
             return BNFToken(kind: .name, start: token, end: endingToken)
-        case .singleQuote, .backtick:
+        case .singleQuote:
             return BNFToken(kind: .quote, range: token.range)
         case .doubleQuote:
             return BNFToken(kind: .doubleQuote, range: token.range)
+		case .backtick:
+			return BNFToken(kind: .backtick, range: token.range)
         case .comma:
             return BNFToken(kind: .comma, range: token.range)
         case .semicolon:
@@ -119,14 +124,16 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 			return BNFToken(kind: .lessThan, range: token.range)
 		case .greaterThan:
 			return BNFToken(kind: .greaterThan, range: token.range)
-        case .otherCharacter:
+		case .otherCharacter, .percent, .ampersand, .at, .caret, .dollar:
             if string[token.range] == "→" {
                 return BNFToken(kind: .assignment, range: token.range)
             }
-
+			
 			if string[token.range] == "´" {
-				return BNFToken(kind: .quote, range: token.range)
+				return BNFToken(kind: .tick, range: token.range)
 			}
+
+			return BNFToken(kind: .otherCharacter, range: token.range)
         default:
             break
         }
