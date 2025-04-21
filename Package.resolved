@@ -1,4 +1,5 @@
 {
+  "originHash" : "7515983f3649fc7fee58fb882fc624f99281ef8f3e557b3103c2f6951754ba4e",
   "pins" : [
     {
       "identity" : "flexer",
@@ -6,7 +7,7 @@
       "location" : "https://github.com/ChimeHQ/Flexer",
       "state" : {
         "branch" : "main",
-        "revision" : "16eafa09e2137fdbb14dadc2296adfedd53f1593"
+        "revision" : "2944639818fde6e79373e62d8200bd4af5ffa37e"
       }
     },
     {
@@ -19,5 +20,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
