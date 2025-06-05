@@ -136,6 +136,19 @@ struct ParserTests {
 		#expect(rules == [expectedRule])
 	}
 
+	@Test func implicitConcatenationWithAngledQuotes() throws {
+		let string = "test = 'a' `b´;"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRule = Rule(
+			name: "test",
+			kind: .concatenation(["a", "b"])
+		)
+		#expect(rules == [expectedRule])
+	}
+
 	@Test
 	func implicitConcatenationWithThreeElements() throws {
 		let string = "test = 'a' 'b' 'c';"
