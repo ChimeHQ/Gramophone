@@ -52,11 +52,27 @@ struct LexerTests {
 	}
 
 	@Test
+	func spaceOnly() throws {
+		let string = " "
+		var lexer = BNFLexer(string: string)
+
+		#expect(lexer.next() == nil)
+	}
+
+	@Test
 	func newlineLetter() throws {
 		let string = "\nb"
 		var lexer = BNFLexer(string: string)
 
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(1..<2), in: string))
+	}
+
+	@Test
+	func newlineSpace() throws {
+		let string = "\n "
+		var lexer = BNFLexer(string: string)
+
+		#expect(lexer.next() == nil)
 	}
 
 	@Test

@@ -81,6 +81,20 @@ struct ParserTests {
 	}
 
 	@Test
+	func alternationOnNewline() throws {
+		let string = "test = 'a' |\n 'b';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		let expectedRule = Rule(
+			"test",
+			kind: .alternation(["a", "b"])
+		)
+		#expect(rules == [expectedRule])
+	}
+
+	@Test
 	func concatenation() throws {
 		let string = "test = 'a', 'b';"
 		let parser = BNFParser()
