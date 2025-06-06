@@ -234,6 +234,8 @@ public final class BNFParser {
 	}
 
     private func parsePrimaryExpression(_ lexer: BNFLexerReference) throws -> Rule.Kind {
+		_ = lexer.skipUntil({ $0.kind != .newline })
+
         let kind = switch lexer.peek()?.kind {
 		case .quote, .doubleQuote, .backtick:
             try parseTerminal(lexer)
@@ -290,7 +292,7 @@ public final class BNFParser {
 		var ending = start
 
 		while let token = lexer.peek() {
-			if token.kind == .semicolon {
+			if token.kind == .semicolon || token.kind == .newline {
 				break
 			}
 

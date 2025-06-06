@@ -27,6 +27,7 @@ public enum BNFTokenKind {
 
     case assignment
 	case otherCharacter
+	case newline
 }
 
 typealias BNFToken = Flexer.Token<BNFTokenKind>
@@ -74,6 +75,10 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 
 		// advance past whitespace again
 		_ = lexer.nextUntil(notIn: [.space, .tab])
+
+		if let start {
+			return BNFToken(kind: .newline, range: start.range)
+		}
 
         guard let token = lexer.next() else {
             return nil

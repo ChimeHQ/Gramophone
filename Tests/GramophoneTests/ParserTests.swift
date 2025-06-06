@@ -411,6 +411,22 @@ b = 'b'
 
 		#expect(rules == expectedRules)
 	}
+
+	@Test
+	func singleNewLineSeparatedAssignments() throws {
+		let string = """
+a = 'a'
+b = 'b'
+"""
+		let rules = try BNFParser().parse(string).get()
+
+		let expectedRules = [
+			Rule("a", kind: "a"),
+			Rule("b", kind: "b"),
+		]
+
+		#expect(rules == expectedRules)
+	}
 }
 
 extension ParserTests {

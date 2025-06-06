@@ -78,6 +78,7 @@ struct LexerTests {
 		let string = "\nb"
 		var lexer = BNFLexer(string: string)
 
+		#expect(lexer.next() == BNFToken(kind: .newline, range: NSRange(0..<1), in: string))
 		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(1..<2), in: string))
 	}
 
@@ -86,6 +87,7 @@ struct LexerTests {
 		let string = "\n "
 		var lexer = BNFLexer(string: string)
 
+		#expect(lexer.next() == BNFToken(kind: .newline, range: NSRange(0..<1), in: string))
 		#expect(lexer.next() == nil)
 	}
 
