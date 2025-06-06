@@ -49,6 +49,13 @@ exception = a - b;
 
 arrow_assigment → a;
 colon_colon_equals_assigment ::= a;
+
+mult_line_expressions = a |
+                        b |
+                        c;
+double_newline_termination = a
+
+
 ```
 
 There's also a bunch of additional notation used by the W3C's [XQuery specification](https://www.w3.org/TR/xquery-31/#EBNFNotation), which may be work looking into.
