@@ -350,6 +350,16 @@ test = 'a';
 	}
 
 	@Test
+	func doubleQuoteSpace() throws {
+		let string = "test = \" \""
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: " ")])
+	}
+
+	@Test
 	func multipleAssignments() throws {
 		let string = """
 a = 'a';

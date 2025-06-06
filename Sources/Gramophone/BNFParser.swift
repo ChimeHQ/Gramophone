@@ -112,8 +112,11 @@ public final class BNFParser {
 		
 		_ = lexer.next()
 
-		guard let _ = lexer.nextUntil({ $0.kind == terminator }) else {
-			throw BNFParserError.missingCloseQuote
+		// this is messy and I think there may be a better way to do this...
+		if lexer.peek()?.kind != terminator {
+			guard let _ = lexer.nextUntil({ $0.kind == terminator }) else {
+				throw BNFParserError.missingCloseQuote
+			}
 		}
 
 		
