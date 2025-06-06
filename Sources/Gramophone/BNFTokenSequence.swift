@@ -130,7 +130,7 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 			return BNFToken(kind: .lessThan, range: token.range)
 		case .greaterThan:
 			return BNFToken(kind: .greaterThan, range: token.range)
-		case .otherCharacter, .percent, .ampersand, .at, .caret, .dollar:
+		case .otherCharacter, .percent, .ampersand, .at, .caret, .dollar, .numberSign, .tilde:
             if string[token.range] == "→" {
                 return BNFToken(kind: .assignment, range: token.range)
             }
