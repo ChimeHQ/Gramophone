@@ -49,6 +49,7 @@ exception = a - b;
 
 arrow_assigment → a;
 colon_colon_equals_assigment ::= a;
+name-with-minus = a;
 
 mult_line_expressions = a |
                         b |

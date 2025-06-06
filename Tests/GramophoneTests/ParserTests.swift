@@ -23,6 +23,16 @@ struct ParserTests {
 	}
 
 	@Test
+	func assignmentReference() throws {
+		let string = "test = a"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: .reference("a"))])
+	}
+
+	@Test
 	func backslashTerminal() throws {
 		let string = "test = '\\';"
 		let parser = BNFParser()
@@ -285,6 +295,16 @@ extension ParserTests {
 		let rules = try parser.parse(string).get()
 
 		#expect(rules == [Rule("test", kind: "a")])
+	}
+
+	@Test
+	func assignmentWithDashName() throws {
+		let string = "te-st = 'a';"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("te-st", kind: "a")])
 	}
 
 	@Test

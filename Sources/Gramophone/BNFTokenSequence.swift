@@ -56,7 +56,8 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 		.lowercaseLetter,
 		.uppercaseLetter,
 		.underscore,
-		.digit
+		.digit,
+		.dash,
 	]
 
     public mutating func next() -> Element? {

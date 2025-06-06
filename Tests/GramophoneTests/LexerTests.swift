@@ -55,6 +55,17 @@ struct LexerTests {
 	}
 
 	@Test
+	func minus() throws {
+		let string = "a - b a-b"
+		var lexer = BNFLexer(string: string)
+
+		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(0..<1), in: string))
+		#expect(lexer.next() == BNFToken(kind: .minus, range: NSRange(2..<3), in: string))
+		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(4..<5), in: string))
+		#expect(lexer.next() == BNFToken(kind: .name, range: NSRange(6..<9), in: string))
+	}
+
+	@Test
 	func spaceOnly() throws {
 		let string = " "
 		var lexer = BNFLexer(string: string)
