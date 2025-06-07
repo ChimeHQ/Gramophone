@@ -9,7 +9,7 @@ public struct Grammar {
 	public let rules: RuleMap
 
 	public init(rules: [Rule]) {
-		self.rules = RuleMap(uniqueKeysWithValues: rules.map { ($0.name, $0) })
+		self.rules = Self.consolidateRules(rules)
 	}
 
 	/// The set of rule names that are not references by any other rule.
@@ -25,6 +25,28 @@ public struct Grammar {
 		}
 
 		return names
+	}
+
+	static func consolidateRules(_ rules: [Rule]) -> RuleMap {
+		var map = RuleMap()
+
+		for rule in rules {
+			let name = rule.name
+
+			guard let existingRule = map[name] else {
+				map[name] = rule
+				continue
+			}
+
+			switch existingRule.kind {
+			case let .alternation(existing):
+				map[name] = Rule(name, kind: .alternation(existing + [rule.kind]))
+			default:
+				map[name] = Rule(name, kind: .alternation([existingRule.kind, rule.kind]))
+			}
+		}
+
+		return map
 	}
 }
 

@@ -47,16 +47,16 @@ tailing_plus_repetition = a+;
 tailing_star_repetition = a*;
 grouping = (a, b, c);
 exception = a - b;
+multiple_alternation = a;
+multiple_alternation = b;
 
 arrow_assigment → a;
 colon_colon_equals_assigment ::= a;
-name-with-minus = a;
 
 mult_line_expressions = a |
                         b |
                         c;
-double_newline_termination = a
-
+newline_statement_end = a
 
 ```
 

@@ -185,3 +185,20 @@ d = c, '3';
 		#expect(grammar.computeFollowMap() == expected)
 	}
 }
+
+extension GrammarTests {
+	@Test
+	func grammerWithDuplicateRules() throws {
+		let rules = [
+			Rule("a", kind: .terminalString("1")),
+			Rule("a", kind: .terminalString("2"))
+		]
+
+		let grammer = Grammar(rules: rules)
+		let expected = [
+			"a": Rule("a", kind: .alternation(["1", "2"]))
+		]
+
+		#expect(grammer.rules == expected)
+	}
+}
