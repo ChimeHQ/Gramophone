@@ -17,6 +17,7 @@ public struct Rule {
         case specialSequence
         case exception(Kind, Kind)
         case reference(String)
+		case range(String, String)
 
 		public static let epsilon = terminalString("")
 

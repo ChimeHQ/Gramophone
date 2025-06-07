@@ -202,7 +202,13 @@ public final class BNFParser {
 			throw BNFParserError.unexpectedToken
 		}
 
-		return .occurrence(rule, frequency: .zeroOrOne)
+		switch rule {
+		case let .exception(.terminalString(a), .terminalString(b)):
+			// this is a hack that transforms a previous parse into the desired form
+			return .range(a, b)
+		default:
+			return .occurrence(rule, frequency: .zeroOrOne)
+		}
 	}
 
 	private func parseRepetition(_ lexer: BNFLexerReference) throws -> Rule.Kind {

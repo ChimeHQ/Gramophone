@@ -58,7 +58,20 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
 		.uppercaseLetter,
 		.underscore,
 		.digit,
-		.dash,
+	]
+
+	private var nameTerminatorComponents: Set<BasicTextCharacterKind> = [
+		.newline,
+		.tab,
+		.space,
+		.lowercaseLetter,
+		.uppercaseLetter,
+		.underscore,
+		.digit,
+		.openBrace,
+		.closeBrace,
+		.doubleQuote,
+		.singleQuote
 	]
 
     public mutating func next() -> Element? {
@@ -150,17 +163,7 @@ struct BNFTokenSequence: Sequence, IteratorProtocol, StringInitializable {
             break
         }
 
-        let endingToken = lexer.nextUntil(in: [.newline,
-                                               .tab,
-                                               .space,
-                                               .lowercaseLetter,
-                                               .uppercaseLetter,
-                                               .underscore,
-                                               .digit,
-											   .openBrace,
-											   .closeBrace,
-											   .doubleQuote,
-											   .singleQuote])
+        let endingToken = lexer.nextUntil(in: nameTerminatorComponents)
 
         return BNFToken(kind: .name, start: token, end: endingToken)
     }

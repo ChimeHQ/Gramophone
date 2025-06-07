@@ -298,16 +298,6 @@ extension ParserTests {
 	}
 
 	@Test
-	func assignmentWithDashName() throws {
-		let string = "te-st = 'a';"
-		let parser = BNFParser()
-
-		let rules = try parser.parse(string).get()
-
-		#expect(rules == [Rule("te-st", kind: "a")])
-	}
-
-	@Test
 	func assignmentWithSymbols() throws {
 		let string = "test = '%';"
 		let parser = BNFParser()
@@ -335,6 +325,16 @@ extension ParserTests {
 		let rules = try parser.parse(string).get()
 
 		#expect(rules == [Rule("test", kind: "🍎")])
+	}
+
+	@Test
+	func codePointRange() throws {
+		let string = "test = [U+0000-U+0001];"
+		let parser = BNFParser()
+
+		let rules = try parser.parse(string).get()
+
+		#expect(rules == [Rule("test", kind: .range("\u{0000}", "\u{0001}"))])
 	}
 
 	@Test
