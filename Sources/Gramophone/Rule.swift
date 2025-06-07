@@ -1,5 +1,14 @@
 import Foundation
 
+extension UnicodeScalar {
+	var formattedString: String {
+		let shortString = String(self.value, radix: 16)
+		let padding = String(repeating: "0", count: max(4 - shortString.count, 0))
+
+		return "U+" + padding + shortString
+	}
+}
+
 public struct Rule {
 	public enum Frequency: Sendable, Hashable {
 		case zeroOrOne
@@ -73,10 +82,7 @@ extension Rule.Kind: CustomStringConvertible {
 		case let .terminalString(value):
 			return "'\(value)'"
 		case let .terminalCharacter(char):
-			let value = String(char.value, radix: 16)
-			let padding = String(repeating: "0", count: max(4 - value.count, 0))
-
-			return "U+\(padding)\(value)"
+			return char.formattedString
 		case let .reference(value):
 			return value
 		case let .exception(a, b):
@@ -94,6 +100,8 @@ extension Rule.Kind: CustomStringConvertible {
 			}
 		case let .grouping(value):
 			return "(\(value.recursivePrint(grouped: true)))"
+		case let .range(from, to):
+			return "[\(from.formattedString)-\(to.formattedString)]"
 		default:
 			return "<unknown>"
 		}
