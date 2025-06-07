@@ -23,10 +23,24 @@ struct GramophoneCommand: ParsableCommand {
 		let input = try String(contentsOfFile: inputPath, encoding: .utf8)
 		let parser = BNFParser()
 
-		let grammar = try parser.parseGrammar(input)
+		let rules = try parser.parse(input).get()
 
-		for (_, rule) in grammar.rules {
-			print(rule)
+		let grammar = Grammar(rules: rules)
+
+		// this garbage preserves the rule name ordering
+		let ruleNames = rules.map { $0.name }
+
+		var printedSet: Set<String> = []
+
+		for ruleName in ruleNames {
+			if printedSet.contains(ruleName) {
+				continue
+			}
+
+
+			print(grammar.rules[ruleName]!)
+
+			printedSet.insert(ruleName)
 		}
 	}
 }
