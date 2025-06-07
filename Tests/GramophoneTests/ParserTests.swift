@@ -314,7 +314,7 @@ extension ParserTests {
 
 		let rules = try parser.parse(string).get()
 
-		#expect(rules == [Rule("test", kind: "\u{0000}")])
+		#expect(rules == [Rule("test", kind: .terminalCharacter(0))])
 	}
 
 	@Test
@@ -324,7 +324,7 @@ extension ParserTests {
 
 		let rules = try parser.parse(string).get()
 
-		#expect(rules == [Rule("test", kind: "🍎")])
+		#expect(rules == [Rule("test", kind: .terminalCharacter(0x1F34E))])
 	}
 
 	@Test
@@ -334,7 +334,7 @@ extension ParserTests {
 
 		let rules = try parser.parse(string).get()
 
-		#expect(rules == [Rule("test", kind: .range("\u{0000}", "\u{0001}"))])
+		#expect(rules == [Rule("test", kind: .range(0, 1))])
 	}
 
 	@Test

@@ -13,16 +13,25 @@ public struct Rule {
 		case occurrence(Kind, frequency: Frequency)
         case grouping(Kind)
         case terminalString(String)
+		case terminalCharacter(UnicodeScalar)
         case comment
         case specialSequence
         case exception(Kind, Kind)
         case reference(String)
-		case range(String, String)
+		case range(UnicodeScalar, UnicodeScalar)
 
 		public static let epsilon = terminalString("")
 
 		public static func optional(_ kind: Kind) -> Kind {
 			.occurrence(kind, frequency: .zeroOrOne)
+		}
+
+		public static func terminalCharacter(_ int: Int) -> Kind {
+			.terminalCharacter(UnicodeScalar(int)!)
+		}
+
+		public static func range(_ a: Int, _ b: Int) -> Kind {
+			.range(UnicodeScalar(a)!, UnicodeScalar(b)!)
 		}
     }
 
@@ -63,6 +72,11 @@ extension Rule.Kind: CustomStringConvertible {
 			return grouped ? value : "(\(value))"
 		case let .terminalString(value):
 			return "'\(value)'"
+		case let .terminalCharacter(char):
+			let value = String(char.value, radix: 16)
+			let padding = String(repeating: "0", count: max(4 - value.count, 0))
+
+			return "U+\(padding)\(value)"
 		case let .reference(value):
 			return value
 		case let .exception(a, b):

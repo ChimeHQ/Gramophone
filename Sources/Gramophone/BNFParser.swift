@@ -75,7 +75,7 @@ public final class BNFParser {
 		let value = UInt32(numericName, radix: 16)!
 		let scalar = UnicodeScalar(value)!
 
-		return Rule.Kind.terminalString(String(scalar))
+		return Rule.Kind.terminalCharacter(scalar)
     }
 
 	private func parseBNFReference(_ lexer: BNFLexerReference) throws -> Rule.Kind {
@@ -203,7 +203,7 @@ public final class BNFParser {
 		}
 
 		switch rule {
-		case let .exception(.terminalString(a), .terminalString(b)):
+		case let .exception(.terminalCharacter(a), .terminalCharacter(b)):
 			// this is a hack that transforms a previous parse into the desired form
 			return .range(a, b)
 		default:
