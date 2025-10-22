@@ -73,7 +73,7 @@ let followMap = grammar.computeFollowMap()
 
 ## Grammar Conversion
 
-I made a dumb script that converts the formal grammar to ebnf because, for some reason, it is not in that format right now. I would have liked to implement that itself in Swift, but it Got Hard, so I fell back to Ruby. If you want to get involved with this, I would recommend [rbenv](https://github.com/rbenv/rbenv).
+I made a dumb script that converts Swift's [formal grammar](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/summaryofthegrammar) to EBNF because, for some reason, it is not in that format right now. I would have liked to implement that itself in Swift, but it Got Hard. So I fell back to Ruby. If you want to get involved with this, I would recommend [rbenv](https://github.com/rbenv/rbenv).
 
 ```
 # cd Scripts
