@@ -71,6 +71,17 @@ let firstMap = grammar.computeFirstMap()
 let followMap = grammar.computeFollowMap()
 ```
 
+## Grammar Conversion
+
+I made a dumb script that converts the formal grammar to ebnf because, for some reason, it is not in that format right now. I would have liked to implement that itself in Swift, but it Got Hard, so I fell back to Ruby. If you want to get involved with this, I would recommend [rbenv](https://github.com/rbenv/rbenv).
+
+```
+# cd Scripts
+# bundle exec ruby convert_swift_grammar.rb > ../Grammars/Swift.ebnf
+```
+
+It's pretty hard to eyeball the conversion correctness because the grammar is complex and uses some facilities that are not typical of EBNF (shocker!). This library cannot yet correctly parse or even represent all of the things the grammar needs, but it's getting closer.
+
 ## Contributing and Collaboration
 
 I would love to hear from you! Issues or pull requests work great. Both a [Matrix space][matrix] and [Discord][discord] are available for live help, but I have a strong bias towards answering in the form of documentation. You can also find me on [mastodon](https://mastodon.social/@mattiem).
