@@ -29,3 +29,4 @@ struct GrammarExtractCommand: ParsableCommand {
 }
 
 GrammarExtractCommand.main()
+
